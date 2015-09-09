@@ -8,7 +8,7 @@ public class Main {
 	Scanner in = new Scanner(System.in);
 	//Empty constructor
 	
-	private Set createCollection(){
+	private ISet createSet() {
 		//Create scanner
 		//Create a new collection object
 		while (in.hasNext()) {
@@ -19,14 +19,14 @@ public class Main {
 		//return collection
 	}
 	
-	void writeCollection(Set collection){
-		System.out.print(collection.getName() + "/t = ");	//I created this in the collection class
-		for(int i = 0; i < collection.getLength(); i++) {
-			System.out.print(collection.getIdentifier(i).getString());
+	void writeCollection(ISet set){
+		System.out.print(set.getName() + "/t = ");	//I created this in the collection class
+		for(int i = 0; i < set.getLength(); i++) {
+			System.out.print(set.getIdentifier(i).getString());
 		}			
 	}
 
-	void performOperations(Set col1, Set col2) {		//Better name? What are the operations combined called?
+	void performOperations(ISet col1, ISet col2) {		//Better name? What are the operations combined called?
 		//create a new collection with the difference (class)
 		//write collection
 		//create a new collection with the intersection (class)
@@ -38,7 +38,9 @@ public class Main {
 	}
 		
 	void start() {
-		while (true) {
+		
+		while (in.hasNextLine()) {
+			Scanner a2 = new Scanner(in.nextLine());
 		//Print the text
 		//Take in the line and create collection 1 --> createCollection
 		//Take in the other line and create collection 2 --> createCollection
