@@ -30,7 +30,7 @@ public class Set implements ISet{
 	 * @return Identifier
 	 */
 	public Identifier getIdentifier(){			//Can you work with indices here or loop?
-		
+		// testje
 	}
 	
 	public void addIdentifier(Identifier identifier){
