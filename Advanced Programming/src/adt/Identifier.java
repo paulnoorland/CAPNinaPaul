@@ -4,7 +4,7 @@ package adt;
  * @author Nina Lijzenga & Paul Noorland
  * @elements
  * 		String 
- * 	
+ *	
  * @structure
  * 		lineair
  * @domain
