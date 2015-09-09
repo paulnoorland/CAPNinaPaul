@@ -1,5 +1,5 @@
 package adt;
-/** ADT for the class Element.
+/** ADT for the class Identifier.
  * 
  * @author Nina Lijzenga & Paul Noorland
  * @elements
@@ -8,37 +8,54 @@ package adt;
  * @structure
  * 		lineair
  * @domain
- * 		begins with a letter, 
+ * 		all rows begin with a letter, 
  * 		is alphanumeric and has a length of at least 1 character.
  * @constructor
  * 		
- * 		Element(String string);			
- * 			<d1>
+ * 		Identifier(String string);			
+ * 			<dl>
  * 				<dt><b>PRE-condition</b><dd>-
  * 				<dt><b>POST-condition</b><dd>The new Element object
  * 				contains a string from the source.
- *			</d1>
+ *			</dl>
+ *		<br>
+ *		Identifier(Identifier id1);
+ *			<dl>
+ *				<dt><b>PRE-condition</b><dd>-
+ *				<dt><b>POST-condtition</b><dd> The new Identifier is a copy of the source identifier</dl>
+ *			</dl>
  *		<br>				
  **/
 
 public interface Identifier{	
+	/**Initializes an identifier
+	 * @precondition
+	 * -
+	 * @postcondition
+	 * The identifier is initialized to an empty identifier.
+	 */
+	void init();
 	/** Returns the string saved in the 
 	 * @precondition
 	 * 		-
 	 * @postcondition
-	 * 		returns a copy of the String in the Element
+	 * 		Copy of the identifier has been initialized.
 	 **/
 	String getString();
 	
-	/** Checks whether a String is an element
+	/** Compares identifier to the input identifier.
 	 * @precondition
 	 * 		-
 	 * @postcondition
-	 * 		returns whether a String is an Element.
-	 * 		true: 
-	 * 			String begins with a letter, is alphanumeric and non-empty
+	 * 		a boolean has been returned.
+	 * 		true:
+	 * 			The input identifier and this identifier are equal.
 	 * 		false:
-	 * 			String either doesn't begin with a letter, is non-alphanumeric or is empty
+	 * 			The input identifier and this identifier are not equal.
+	 * 
+	 * @param identifier
+	 * @return boolean
 	 **/
-	boolean isElement(String string);
+	boolean equals(Identifier id);
+	
 }
