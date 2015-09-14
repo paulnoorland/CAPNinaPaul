@@ -14,6 +14,7 @@ public class Main {
 		while (in.hasNext()) {
 			//Scanner reads line, checks if the input is correct and parses the identifiers
 			//Create for each identifier a new identifier object
+			// Check if identifier is already in the set 
 			//Put the identifier object into the collection
 		}
 		//return collection

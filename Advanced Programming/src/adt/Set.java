@@ -10,16 +10,15 @@ public class Set implements ISet{
 		setLength = 0;
 	}
 	
-	Set (Set originalSet) {
-		this.set = new Identifier[MAX_AMOUNT_IDENTIFIERS];
-		for (int i = 0; i < originalSet.getLength(); i++) {
-			addIdentifier(originalSet.getIdentifier());
+	Set (Set copySet) {
+		Set s1 = new Set();
+		for (int i = 0; i < copySet.getLength(); i++){
+			s1.addIdentifier(copySet.set[i]);
 		}
 	}
 	
 	public void init(){
-		Set s1 = new Set();			//Is good?
-		set = s1.set;
+		this.set = new Identifier[MAX_AMOUNT_IDENTIFIERS];
 	}
 	
 	/** Returns an identifier
@@ -29,29 +28,25 @@ public class Set implements ISet{
 	 * A copy of an identifier from the set is returned
 	 * @return Identifier
 	 */
-	public Identifier getIdentifier(){			//Can you work with indices here or loop?
-		// testje
+	public Identifier getIdentifier(){					
+		return set[setLength - 1];		// Always returns the last element of the set
 	}
 	
 	public void addIdentifier(Identifier identifier){
-		if (setIsFull() || identifierIsInSet(identifier)) {
-			return;
-		} else {
 			this.set[setLength] = identifier;
 			setLength++;
-		}
 	}
 	
-	private boolean identifierIsInSet(Identifier identifier) {
+	public boolean hasIdentifier(Identifier identifier) {
 		for (int i = 0; i < getLength(); i++) {
-			if (set[i].getString().equals(identifier.getString())) {
+			if (set[i].equals(identifier)) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	private boolean setIsFull() {
+	public boolean setIsFull() {
 		if (setLength >= 10){
 			return true;
 		} else {
@@ -70,78 +65,126 @@ public class Set implements ISet{
 			return false;
 		}
 	}
-	
-	/**Removes an identifier from the set
-	 * @precondition
-	 * Set is not empty
-	 * @postcondition
-	 * An element identifier has been removed from the set
-	 * @param identifier
-	 */
-	public void removeIdentifier(Identifier identifier){			// Work with indices?
-		if (!isEmpty()) {
-			return;
+
+	public void removeIdentifier(Identifier identifier){
+		for (int i = 0; i < setLength; i++) {
+			if (set[i].equals(identifier)) {
+				set[i] = set[setLength -1];
+				setLength =- 1;
+			}
 		}
-		// search for same identifier with equals function in a loop
-		// If it is the same move every element after that 1 to the left, make
-		// the set[setLength] = null and setLength--;
-		
-		
-		
 	}
 	
 	/** Returns the union of the set and the input set
-	 * @precondition										//Is this correct??
+	 * @precondition										
 	 * -
 	 * @postcondition
-	 * SUCCESS: A new set containing the union of the set and the input set has been returned
+	 * SUCCESS: A new set containing the identifiers of set and the input set without identifiers that occur in both has been returned
 	 * FAILURE: The resulting set of the operation is larger than 20 identifiers
 	 * @param set
 	 * @return
 	 * The union of the set and the input set
 	 */
-	public Set union(Set set) throws Exception{
-		
+	public Set union(Set s2) throws Exception {
+		Set union = new Set(this);
+		Set copyS2 = new Set(s2);
+		while (copyS2.getLength() > 0) {
+			Identifier identifier = copyS2.getIdentifier();
+			copyS2.removeIdentifier(identifier);
+			if (!union.hasIdentifier(identifier)) {
+				if(union.getLength() >= MAX_AMOUNT_IDENTIFIERS){
+					throw new Exception();
+				}
+			union.addIdentifier(identifier);
+			}
+		}
+		return union;
 	}
 	
 	/** Returns the difference between the set and the input set
 	 * @precondition
 	 * -
 	 * @postcondition
-	 * A new set containing the difference between the set and the input set has been returned
+	 * A new set containing the identifiers that are only in the set and not in the input set has been returned
 	 * @param set
 	 * @return
 	 * The difference between the set and the input set
-	 */
-	public Set difference(Set set){
-		
+	 */	
+	public Set difference(Set set2) {
+		Set difference = new Set(this);
+		for (int i = 0; i < difference.getLength(); i++) {
+			Set copyS2 = new Set(set2);
+			while (copyS2.getLength() > 0) {
+				Identifier identifier = copyS2.getIdentifier();
+				copyS2.removeIdentifier(identifier);
+				if (identifier.equals(difference.set[i])) {
+					difference.removeIdentifier(set[i]);
+					i--;
+					continue;
+				}
+			}
+		}
+		return difference;
 	}
 	
 	/** Returns the intersection of the set and the input set
 	 * @precondition										
 	 * -
 	 * @postcondition
-	 * A new set containing the intersection of the set and the input set has been returned
+	 * A new set containing the identifiers that are both in the set and the input set has been returned
 	 * @param set
 	 * @return
 	 * The intersection of the set and the input set
 	 */
-	public Set intersection(Set set){
-		
+	public Set intersection(Set set2){
+		Set intersection = new Set(this);
+		for (int i = 0; i < intersection.setLength; i++) {
+			Set copySet2 = new Set(set2);
+			while (copySet2.setLength > 0) {
+				Identifier identifier = copySet2.getIdentifier();
+				copySet2.removeIdentifier(identifier);
+				if (!intersection.set[i].equals(identifier)) {
+					intersection.removeIdentifier(set[i]);
+					i--;
+					continue;
+				}
+			}
+		}
+		return intersection;
 	}
 	
 	/** Returns the symmetric difference between the set and the input set
 	 * @precondition
 	 * -
 	 * @postcondition
-	 * SUCCESS: A new set containing the symmetric difference between the set and the input set has been returned
+	 * SUCCESS: A new set containing the identifiers that are only in the set and only in the input set has been returned
 	 * FAILURE: The resulting set of the operation is larger than 20 identifiers
 	 * @param set
 	 * @return
 	 * The symmetric difference between the set and the input set
 	 */
-	public Set symmetricDifference(Set set) throws Exception{
-		
+	public Set symmetricDifference(Set set2) throws Exception{
+		Set intersection = intersection(set2);
+		Set differenceSet1 = difference(intersection);
+		Set copySet2 = new Set(set2);
+		for (int i = 0; i < copySet2.setLength; i++) {
+			Set copyIntersection = new Set(intersection);
+			while (copyIntersection.setLength > 0) {
+				Identifier identifier = copyIntersection.getIdentifier();
+				copyIntersection.removeIdentifier(identifier);
+				if (copySet2.set[i].equals(identifier)){
+					copySet2.removeIdentifier(identifier);
+					i--;
+					continue;
+				}
+			}
+		}
+		if (differenceSet1.setLength + copySet2.setLength > 20) {
+			throw new Exception();
+		}
+		for (int i = 0; i < copySet2.setLength; i++) {
+			differenceSet1.addIdentifier(copySet2.set[i]);
+		}
+		return differenceSet1;
 	}
-
 }
