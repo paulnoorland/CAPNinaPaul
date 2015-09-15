@@ -34,25 +34,26 @@ public class Main {
 			String temp = setScanner.next();		
 			
 			if(checkIdentifierFormat(temp)) result.addIdentifier(createIdentifier(temp));
-			else out.println("Identifier format wrong");
+			else out.println("Identifier format wrong"); //Should return to asking for first collection..
 		}
 		return result;
 	}
 	
 	void printSet(Set set){
+		System.out.println(set.getLength());
 		for(int i = 0; i < set.getLength(); i++) {
 			out.print(set.getIdentifier().getString());
 		}			
 	}
 
 	void performOperations(Set set1, Set set2) throws Exception {
-		out.println("Difference: ");
-		printSet(set1.difference(set2));
-		out.println("Intersection: ");
-		printSet(set1.intersection(set2));
+		//out.println("Difference: ");
+		//printSet(set1.difference(set2));
+		//out.println("Intersection: ");
+		//printSet(set1.intersection(set2));
 		out.println("Union: ");
 		printSet(set1.union(set2));
-		out.println("Symmetric difference: ");
+		//out.println("Symmetric difference: ");
 	}
 		
 	Boolean checkSetFormat(String string) {
@@ -95,8 +96,6 @@ public class Main {
 				if(checkSetFormat(set2String)){
 					setScanner = new Scanner(formatString(set2String));
 					Set set2 = createSet(setScanner);
-					
-					out.print(set1.getLength());
 					
 					try {
 						performOperations(set1, set2);
