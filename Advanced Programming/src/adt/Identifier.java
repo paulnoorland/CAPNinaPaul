@@ -9,7 +9,7 @@ public class Identifier implements IIdentifier {
 	}
 	
 	public Identifier(Identifier identifier){
-		this(identifier.string);
+		string = identifier.getString();
 	}
 	
 	public void init(String string) {

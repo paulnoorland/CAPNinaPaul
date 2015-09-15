@@ -30,7 +30,8 @@ public class Set implements ISet{
 	 * @return Identifier
 	 */
 	public Identifier getIdentifier(){			//Can you work with indices here or loop?
-		// testje
+		Identifier result = new Identifier("whoo");
+		return result;
 	}
 	
 	public void addIdentifier(Identifier identifier){
@@ -86,8 +87,6 @@ public class Set implements ISet{
 		// If it is the same move every element after that 1 to the left, make
 		// the set[setLength] = null and setLength--;
 		
-		
-		
 	}
 	
 	/** Returns the union of the set and the input set
@@ -101,7 +100,8 @@ public class Set implements ISet{
 	 * The union of the set and the input set
 	 */
 	public Set union(Set set) throws Exception{
-		
+		Set result = new Set();
+		return result;
 	}
 	
 	/** Returns the difference between the set and the input set
@@ -114,7 +114,8 @@ public class Set implements ISet{
 	 * The difference between the set and the input set
 	 */
 	public Set difference(Set set){
-		
+		Set result = new Set();
+		return result;
 	}
 	
 	/** Returns the intersection of the set and the input set
@@ -127,7 +128,8 @@ public class Set implements ISet{
 	 * The intersection of the set and the input set
 	 */
 	public Set intersection(Set set){
-		
+		Set result = new Set();
+		return result;
 	}
 	
 	/** Returns the symmetric difference between the set and the input set
@@ -141,7 +143,8 @@ public class Set implements ISet{
 	 * The symmetric difference between the set and the input set
 	 */
 	public Set symmetricDifference(Set set) throws Exception{
-		
+		Set result = new Set();
+		return result;
 	}
 
 }
