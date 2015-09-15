@@ -15,32 +15,35 @@ public class Main {
 	boolean nextCharIsDigit (Scanner in) {
 		return in.hasNext("[0-9]");
 		}
-
-	private Identifier createIdentifier(String string){
-		Scanner sc = new Scanner(string);
-		sc.useDelimiter("");
-		
-		if(string.length() > 0 && nextCharIsLetter(sc)){
-			for (int i = 0; i < string.length(); i++){
-				if(!nextCharIsLetter(sc) || !nextCharIsDigit(sc)) return null;	//Kijk hier nog even naar volgens mij doe je 2 keer een check op nextCharIsLetter
-			}
-			Identifier result = new Identifier(string);
-			return result;
-		} 
-		return null;	//throw exception?
+	
+	private boolean checkIdentifierFormat(Scanner temp){
+		out.println(temp.next());
+		if(!nextCharIsLetter(temp)) return false;
+		while(temp.hasNext()){
+			if(!(nextCharIsLetter(temp) || nextCharIsDigit(temp))) return false;
+			//temp.next(); //nextCharIsLetter and nextChar is digit don't read in characters
+						 //not sure if this works, otherwise for statement with string.length and charAt(i)
+		}	
+		return true;
 	}
 	
-	private Set createSet(String string) {
-		Scanner sc = new Scanner(string);
-		
-		sc.useDelimiter(" ");
-		
+	//overbodig?
+	private Identifier createIdentifier(String string){
+		Identifier result = new Identifier(string);
+		return result;
+	}
+	
+	private Set createSet(Scanner setScanner) {
+		setScanner.useDelimiter(" ");
 		Set result = new Set();
-		while (sc.hasNext()) {
-			out.print(sc.next());								//Waarom print je hier?
-			result.addIdentifier(createIdentifier(sc.next()));
+		
+		while (setScanner.hasNext()) {
+			String temp = setScanner.next();
+			
+			Scanner tempScanner = new Scanner(temp);
+			if(checkIdentifierFormat(tempScanner)) result.addIdentifier(createIdentifier(temp));
+			else out.print("Identifier format wrong");
 		}
-		sc.close();
 		return result;
 	}
 	
@@ -51,30 +54,40 @@ public class Main {
 	}
 
 	void performOperations(Set set1, Set set2) throws Exception {
-		out.print("Difference: ");
+		out.println("Difference: ");
 		printSet(set1.difference(set2));
-		out.print("Intersection: ");
+		out.println("Intersection: ");
 		printSet(set1.intersection(set2));
-		out.print("Union: ");
+		out.println("Union: ");
 		printSet(set1.union(set2));
-		out.print("Symmetric difference: ");
+		out.println("Symmetric difference: ");
 	}
 		
-	String checkFormat(String setString) {
-		if(setString.charAt(0) != '{') {
-			return "Missing '{'";
+	Boolean checkSetFormat(String string) {
+		if(string.length() == 0){
+			return false;
 		}
-		if((setString.charAt(setString.length() -1)) != '}') {
-			return "Missing '}'";
+		if(string.charAt(0) != '{') {
+			out.println("Missing '{'. ");
+			return false;
 		}
-		return null;
+		if((string.charAt(string.length() -1)) != '}') {
+			out.println("Missing '}'. ");
+			return false;
+		}
+		return true;
+	}
+	
+	String formatString(String string){
+		return string.substring(1, string.length() - 1 );  //-2 misschien?
 	}
 	
 	void start() {
+		//Sebastian had het erover dat while(in.hasNextLine()) beter is geloof ik..
+
 		while (true) {
-			out.print("Give the first collection: ");
+			out.println("Give the first collection: ");
 			String set1String = in.nextLine();
-			if (set1String.length() == 0) return;		//Question must be repeated if no input is given
 			
 			/*TODO:
 			 * Meldingen verwerken van checkFormat en een return doen zodat de while loop opnieuw wordt aangeroepen
@@ -83,18 +96,27 @@ public class Main {
 			 * wel testen want het is wat makkelijker om je eigen code te debuggen. Succes!
 			 */
 			
-			set1String = checkFormat(set1String);
-			Set set1 = createSet(set1String);
-			
-			out.print("Give the second collection: ");
-			String set2String = in.nextLine();
-			Set set2 = createSet(set2String);
+			if(checkSetFormat(set1String)){
+				Scanner setScanner = new Scanner(formatString(set1String));
+				Set set1 = createSet(setScanner);
 				
-			try {
-				performOperations(set1, set2);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}			
+				out.println("Give the second collection: ");
+				String set2String = in.nextLine();
+				
+				if(checkSetFormat(set2String)){
+					setScanner = new Scanner(formatString(set2String));
+					Set set2 = createSet(setScanner);
+					
+					if(set2.isEmpty()) out.println("Set is empty mate");
+					else out.print("test" + set2.getIdentifier().getString());
+					
+					try {
+						performOperations(set1, set2);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} 
+			}
 		}		
 	}
 	
