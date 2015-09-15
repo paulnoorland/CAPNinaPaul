@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class Main {
 	
 	Scanner in = new Scanner(System.in);
-	//Empty constructor
+	PrintStream out = new PrintStream(System.out);
 	
 	private ISet createSet() {
 		//Create scanner
@@ -20,32 +20,69 @@ public class Main {
 		//return collection
 	}
 	
-	void writeCollection(ISet set){
-		System.out.print(set.getName() + "/t = ");	//I created this in the collection class
+	boolean nextCharIsLetter (Scanner in) {
+		return in.hasNext("[a-zA-Z]");
+		}
+	
+	boolean nextCharIsDigit (Scanner in) {
+		return in.hasNext("[0-9]");
+		}
+
+	private Identifier createIdentifier(String string){
+		Scanner sc = new Scanner(string);
+		sc.useDelimiter("");
+		
+		if(string.length() > 0 && nextCharIsLetter(sc)){
+			for (int i = 0; i < string.length(); i++){
+				if(!nextCharIsLetter(sc) || !nextCharIsDigit(sc)) return null;
+			}
+			Identifier result = new Identifier(string);
+			return result;
+		} 
+		return null;	//throw exception?
+	}
+	
+	private Set createSet(String string) {
+		Scanner sc = new Scanner(string);
+		sc.useDelimiter(" ");
+		
+		Set result = new Set();
+		while (sc.hasNext()) {
+			out.print(sc.next());
+			result.addIdentifier(createIdentifier(sc.next()));
+		}
+		return result;
+	}
+	
+	void printSet(Set set){
 		for(int i = 0; i < set.getLength(); i++) {
-			System.out.print(set.getIdentifier(i).getString());
+			out.print(set.getIdentifier().getString());
 		}			
 	}
 
-	void performOperations(ISet col1, ISet col2) {		//Better name? What are the operations combined called?
-		//create a new collection with the difference (class)
-		//write collection
-		//create a new collection with the intersection (class)
-		//write collection
-		//create a new collection with the union (class)
-		//write collection
-		//create a new collection with the symmetric difference (class)
-		//write collection
+	void performOperations(Set set1, Set set2) throws Exception {
+		out.print("Difference: ");
+		printSet(set1.difference(set2));
+		out.print("Intersection: ");
+		printSet(set1.intersection(set2));
+		out.print("Union: ");
+		printSet(set1.union(set2));
+		out.print("Symmetric difference: ");
 	}
 		
 	void start() {
-		
 		while (in.hasNextLine()) {
 			Scanner a2 = new Scanner(in.nextLine());
-		//Print the text
-		//Take in the line and create collection 1 --> createCollection
-		//Take in the other line and create collection 2 --> createCollection
-		//Calculate the difference, intersection, union and symmetric difference and print them --> performOperations
+			//Still have to do the scanners
+			Set set1 = createSet(in.nextLine());
+			Set set2 = createSet(in.nextLine());
+				
+			try {
+				performOperations(set1, set2);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+					
 		}		
 	}
 	
