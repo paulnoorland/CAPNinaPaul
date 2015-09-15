@@ -8,29 +8,22 @@ public class Main {
 	Scanner in = new Scanner(System.in);
 	PrintStream out = new PrintStream(System.out);
 	
-	boolean nextCharIsLetter (Scanner in) {
-		return in.hasNext("[a-zA-Z]");
-		}
 	
-	boolean nextCharIsDigit (Scanner in) {
-		return in.hasNext("[0-9]");
+	boolean isAlphanumeric(String string){
+		for(int i = 0; i<string.length(); i++){
+			char temp = string.charAt(i);
+			if(!(Character.isDigit(temp) || Character.isLetter(temp))) return false;
 		}
-	
-	private boolean checkIdentifierFormat(Scanner temp){
-		out.println(temp.next());
-		if(!nextCharIsLetter(temp)) return false;
-		while(temp.hasNext()){
-			if(!(nextCharIsLetter(temp) || nextCharIsDigit(temp))) return false;
-			//temp.next(); //nextCharIsLetter and nextChar is digit don't read in characters
-						 //not sure if this works, otherwise for statement with string.length and charAt(i)
-		}	
 		return true;
 	}
 	
-	//overbodig?
-	private Identifier createIdentifier(String string){
-		Identifier result = new Identifier(string);
-		return result;
+	private boolean checkIdentifierFormat(String string){
+		if(!Character.isLetter(string.charAt(0)) || !isAlphanumeric(string) || !(string.length() > 0)) return false;
+		return true;
+	}
+	
+	private Identifier createIdentifier(String string){ //overbodig?
+		return new Identifier(string);
 	}
 	
 	private Set createSet(Scanner setScanner) {
@@ -38,11 +31,10 @@ public class Main {
 		Set result = new Set();
 		
 		while (setScanner.hasNext()) {
-			String temp = setScanner.next();
+			String temp = setScanner.next();		
 			
-			Scanner tempScanner = new Scanner(temp);
-			if(checkIdentifierFormat(tempScanner)) result.addIdentifier(createIdentifier(temp));
-			else out.print("Identifier format wrong");
+			if(checkIdentifierFormat(temp)) result.addIdentifier(createIdentifier(temp));
+			else out.println("Identifier format wrong");
 		}
 		return result;
 	}
@@ -78,21 +70,18 @@ public class Main {
 		return true;
 	}
 	
-	String formatString(String string){
-		return string.substring(1, string.length() - 1 );  //-2 misschien?
+	String formatString(String string){	//overbodig?
+		return string.substring(1, string.length() - 1 );
 	}
 	
 	void start() {
 		//Sebastian had het erover dat while(in.hasNextLine()) beter is geloof ik..
-
 		while (true) {
 			out.println("Give the first collection: ");
 			String set1String = in.nextLine();
 			
 			/*TODO:
-			 * Meldingen verwerken van checkFormat en een return doen zodat de while loop opnieuw wordt aangeroepen
-			 * de { en } uit de string halen zodat de identifiers er makkelijk in kunnen
-			 * Testen. Kijk even of het allemaal goed gegaan is met de operations. Als dat niet gaat zal ik ze 
+			 * Kijk even of het allemaal goed gegaan is met de operations. Als dat niet gaat zal ik ze 
 			 * wel testen want het is wat makkelijker om je eigen code te debuggen. Succes!
 			 */
 			
@@ -107,8 +96,7 @@ public class Main {
 					setScanner = new Scanner(formatString(set2String));
 					Set set2 = createSet(setScanner);
 					
-					if(set2.isEmpty()) out.println("Set is empty mate");
-					else out.print("test" + set2.getIdentifier().getString());
+					out.print(set1.getLength());
 					
 					try {
 						performOperations(set1, set2);
