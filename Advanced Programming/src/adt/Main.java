@@ -33,7 +33,10 @@ public class Main {
 		while (setScanner.hasNext()) {
 			String temp = setScanner.next();		
 			
-			if(checkIdentifierFormat(temp)) result.addIdentifier(createIdentifier(temp));
+			if(checkIdentifierFormat(temp)) {
+				Identifier identifier = createIdentifier(temp);
+				if (!result.hasIdentifier(identifier)) result.addIdentifier(identifier);
+			}
 			else out.println("Identifier format wrong"); //Should return to asking for first collection..
 		}
 		return result;
@@ -64,11 +67,11 @@ public class Main {
 			return false;
 		}
 		if(string.charAt(0) != '{') {
-			out.println("Missing '{'. ");
+			out.println("Missing '{'. \n");
 			return false;
 		}
 		if((string.charAt(string.length() -1)) != '}') {
-			out.println("Missing '}'. ");
+			out.println("Missing '}'. \n");
 			return false;
 		}
 		return true;
