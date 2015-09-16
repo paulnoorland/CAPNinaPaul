@@ -36,8 +36,10 @@ public class Main {
 			if(checkIdentifierFormat(temp)) {
 				Identifier identifier = createIdentifier(temp);
 				if (!result.hasIdentifier(identifier)) result.addIdentifier(identifier);
+			} else {
+				out.println("Identifier format wrong \n"); 
+				start();
 			}
-			else out.println("Identifier format wrong"); //Should return to asking for first collection..
 		}
 		return result;
 	}
