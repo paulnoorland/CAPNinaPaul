@@ -168,9 +168,9 @@ public class Set implements ISet{
 		Set intersection = intersection(set2);
 		Set differenceSet1 = difference(intersection);
 		Set copySet2 = new Set(set2);
-		for (int i = 0; i < copySet2.setLength; i++) {
+		for (int i = 0; i < copySet2.getLength(); i++) {
 			Set copyIntersection = new Set(intersection);
-			while (copyIntersection.setLength > 0) {
+			while (copyIntersection.getLength() > 0) {
 				Identifier identifier = copyIntersection.getIdentifier();
 				copyIntersection.removeIdentifier(identifier);
 				if (copySet2.set[i].equals(identifier)){
@@ -180,10 +180,10 @@ public class Set implements ISet{
 				}
 			}
 		}
-		if (differenceSet1.setLength + copySet2.setLength > 20) {
+		if (differenceSet1.getLength() + copySet2.getLength() > MAX_AMOUNT_IDENTIFIERS) {
 			throw new Exception();
 		}
-		for (int i = 0; i < copySet2.setLength; i++) {
+		for (int i = 0; i < copySet2.getLength(); i++) {
 			differenceSet1.addIdentifier(copySet2.set[i]);
 		}
 		return differenceSet1;

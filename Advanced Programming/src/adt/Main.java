@@ -38,7 +38,7 @@ public class Main {
 				if (!result.hasIdentifier(identifier)) result.addIdentifier(identifier);
 			} else {
 				out.println("Identifier format wrong \n"); 
-				start();
+				start();									// To dirty???!
 			}
 		}
 		return result;
