@@ -11,9 +11,10 @@ public class Set implements ISet{
 	}
 	
 	Set (Set copySet) {
-		Set s1 = new Set();
+		set = new Identifier[MAX_AMOUNT_IDENTIFIERS];
+		setLength = 0;
 		for (int i = 0; i < copySet.getLength(); i++){
-			s1.addIdentifier(copySet.set[i]);
+			addIdentifier(copySet.set[i]);
 		}
 	}
 	
@@ -70,7 +71,7 @@ public class Set implements ISet{
 		for (int i = 0; i < setLength; i++) {
 			if (set[i].equals(identifier)) {
 				set[i] = set[setLength -1];
-				setLength =- 1;
+				setLength -= 1;
 			}
 		}
 	}
@@ -118,9 +119,9 @@ public class Set implements ISet{
 				Identifier identifier = copyS2.getIdentifier();
 				copyS2.removeIdentifier(identifier);
 				if (identifier.equals(difference.set[i])) {
-					difference.removeIdentifier(set[i]);
+					difference.removeIdentifier(difference.set[i]);
 					i--;
-					continue;
+					break;
 				}
 			}
 		}
@@ -137,16 +138,16 @@ public class Set implements ISet{
 	 * The intersection of the set and the input set
 	 */
 	public Set intersection(Set set2){
-		Set intersection = new Set(this);
-		for (int i = 0; i < intersection.setLength; i++) {
+		Set copySet1 = new Set(this);
+		Set intersection = new Set();
+		
+		for (int i = 0; i < copySet1.setLength; i++) {
 			Set copySet2 = new Set(set2);
 			while (copySet2.setLength > 0) {
 				Identifier identifier = copySet2.getIdentifier();
 				copySet2.removeIdentifier(identifier);
-				if (!intersection.set[i].equals(identifier)) {
-					intersection.removeIdentifier(set[i]);
-					i--;
-					continue;
+				if (identifier.equals(copySet1.set[i])) {
+					intersection.addIdentifier(copySet1.set[i]);
 				}
 			}
 		}
@@ -175,7 +176,7 @@ public class Set implements ISet{
 				if (copySet2.set[i].equals(identifier)){
 					copySet2.removeIdentifier(identifier);
 					i--;
-					continue;
+					break;
 				}
 			}
 		}

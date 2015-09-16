@@ -40,19 +40,23 @@ public class Main {
 	}
 	
 	void printSet(Set set){
-		for(int i = 0; i < set.getLength(); i++) {
-			out.print(set.getIdentifier().getString());
+		while (set.getLength() > 0) {
+			Identifier identifier = set.getIdentifier();
+			set.removeIdentifier(identifier);
+			out.print(identifier.getString() + " ");
 		}			
 	}
 
 	void performOperations(Set set1, Set set2) throws Exception {
 		out.println("Difference: ");
 		printSet(set1.difference(set2));
-		out.println("Intersection: ");
+		out.println("\nIntersection: ");
 		printSet(set1.intersection(set2));
-		out.println("Union: ");
+		out.println("\nUnion: ");
 		printSet(set1.union(set2));
-		out.println("Symmetric difference: ");
+		out.println("\nSymmetric difference: ");
+		printSet(set1.symmetricDifference(set2));
+		out.print("\n\n");
 	}
 		
 	Boolean checkSetFormat(String string) {
