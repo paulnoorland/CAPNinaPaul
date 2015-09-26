@@ -92,8 +92,6 @@ public interface ISet {
 	 */
 	Set union(Set set) throws Exception;
 	
-	// Descibe the operations
-	
 	/** Returns the difference between the set and the input set
 	 * @precondition
 	 * -
