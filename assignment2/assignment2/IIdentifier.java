@@ -25,7 +25,9 @@ package assignment2;
  *		<br>				
  **/
 
-public interface IIdentifier{	
+// Change ADT
+
+public interface IIdentifier extends Data<IIdentifier>{	
 	/**Initializes an identifier
 	 * @precondition
 	 * -

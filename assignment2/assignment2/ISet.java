@@ -24,7 +24,9 @@ package assignment2;
 *	    </dl>
 **/
 
-public interface ISet {
+// Change
+
+public interface ISet<E extends Data<E>> extends Clonable<ISet> {
 	public static int MAX_AMOUNT_IDENTIFIERS = 20;
 	
 	/**Initializes a set
@@ -90,7 +92,7 @@ public interface ISet {
 	 * @return
 	 * The union of the set and the input set
 	 */
-	Set union(Set set) throws Exception;
+	ISet<E> union(ISet<E> set) throws Exception;
 	
 	// Descibe the operations
 	

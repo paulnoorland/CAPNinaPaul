@@ -3,14 +3,15 @@ package assignment2;
 /** ADT for class NaturalNumber
  * @author Nina Lijzenga & Paul Noorland
  * @elements
- * 	integers			//positive number or 0. What does that mean? Can they also be negative?
+ * 		digits of type character
   * @structure
  * 		lineair
  * @domain
- * 		From minus infinity to infinity
+ * 		All natural numbers including zero
  * @constructor		
  *		//What should be constructed? A stringbuffer?
  */
 public interface INaturalNumber {
 	//Which functions are needed?
+	//looks like identifier except for pre and post condition
 }
