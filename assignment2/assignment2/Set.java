@@ -1,6 +1,7 @@
 package assignment2;
 
 public class Set implements ISet{
+	//TODO: must be implemented as a list and not an array
 	
 	private Identifier[] set;
 	private int setLength;

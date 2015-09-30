@@ -30,7 +30,7 @@ public class Identifier implements IIdentifier {
 	}
 
 	@Override
-	public IIdentifier clone() {				// Is IIdentifier correct
+	public Identifier clone() {				// Is IIdentifier correct
 		
 		return null;
 	}
@@ -40,6 +40,10 @@ public class Identifier implements IIdentifier {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
-	
+
+	@Override
+	public int compareTo(Identifier identifier) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

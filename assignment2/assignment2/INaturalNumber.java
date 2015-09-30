@@ -10,11 +10,13 @@ package assignment2;
  * 		All natural numbers including zero
  * @constructor		
  *		//What should be constructed? A stringbuffer?
- *		
  *		INaturalNumber()
- *			- 0
- *
- *		new StringBuffer('0');
+ *		<dl>
+ * 				<dt><b>PRE-condition</b><dd>-
+ * 				<dt><b>POST-condition</b><dd>A new StringBuffer object has been created
+ * 					with zero characters in it.
+ *			</dl>
+ *		<br>
  */
 public interface INaturalNumber extends Data<INaturalNumber>{			
 	//Which functions are needed?
@@ -22,12 +24,11 @@ public interface INaturalNumber extends Data<INaturalNumber>{
 	
 	char getNumber();
 	
-	
 	void addNumber(char c);
 	
 	void removeNumber(char c);			//Is this the best way or is index better?
 	
-	boolean compareTo();
+	NaturalNumber clone();
 	
-	INaturalNumber clone();
+	int compareTo(INaturalNumber o);
 }

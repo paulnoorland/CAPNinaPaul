@@ -7,14 +7,16 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	 * linear order corresponds to the linear order of keys stred in elements in the list
 	 */
 
-	// List has to be doubly linked
+	//TODO: What happens with elements with a key that's already in the list?????
 	Node list;
 	Node currentElement;
 	Node head;				// points to first element of the list
 	Node tail;				// points to last element of the list
+	
 	private int size;
 	
 	List(){
+		list = head;
 		this.size = 0;
 	}
 	
@@ -34,7 +36,6 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	 *	@postcondition - list-POST is empty and has been returned.
 	 **/
 	public List<E> init(){
-		list = null;
 		head = null;
 		tail = null;
 		currentElement = null;
@@ -49,29 +50,38 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 		return size;
 	}
 
+	private void placeNode(Node newNode, Node before, Node after) {
+		newNode.prior = before;
+		newNode.next = after;
+		before.next = newNode;
+		after.prior = newNode;
+	}
+	
 	/** @precondition  -
 	 *	@postcondition - A copy of d has been added to List-PRE.
 	 *    				current points to the newly added element.
 	 *   				list-POST has been returned.
 	 **/
 	public ListInterface<E> insert(E d){
-		if(isEmpty()) {
-			currentElement = head = tail = new Node(d, list, null);		// Watch for reference errors
+		if(isEmpty()) {													// EMPTY LIST
+			currentElement = head = tail = new Node(d.clone(), list, null);		// Watch for reference errors
 		} else {
-			currentElement = head;
-			Node newNode = new Node(d);
-			for(int i = 0; i < size; i++) {
-				if(currentElement.data.compareTo(newNode.data) > 0) {		// Watch if it should be smaller or bigger
-					goToNext();
-				} else if(currentElement.data.compareTo(newNode.data) > 0) {
-					return this;
-				} else {
-					newNode.prior = currentElement.prior;
-					newNode.next = currentElement;
-					currentElement.prior.next = newNode;
-					currentElement.prior = newNode;
-					break;
+			goToFirst();
+			Node newNode = new Node(d.clone());
+			if(newNode.data.compareTo(currentElement.data) < 0) {		// Add in front
+				placeNode(newNode, list, currentElement);
+				head = newNode;
+			} else {
+				for(int i = 0; i < size; i++) {							// Add in the middle
+					if(currentElement.data.compareTo(newNode.data) > 0) {
+						goToNext();
+					} else {
+						placeNode(newNode, currentElement.prior, currentElement);
+						break;
+					}
 				}
+				placeNode(newNode, currentElement, null); 				// Add to end //Check if this works because of null.prior
+				tail = newNode;
 			}
 		}
 		size++;
@@ -83,7 +93,7 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	 *	@postcondition - A copy of the value of the current element has been returned.
 	 */
 	public E retrieve(){
-		return currentElement.data;
+		return currentElement.data.clone();
 	}
 
 
@@ -100,7 +110,22 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	 *  				list-POST has been returned.
 	 **/
 	public ListInterface<E> remove(){
-		
+		if(size == 1) {												//Remove the only element
+			head = tail = currentElement = null;
+		} else if(currentElement == head) {							//Remove first element
+			currentElement.prior = list;
+			list = currentElement.next;
+			currentElement = head = list.next;
+		} else if(currentElement == tail) {							//Remove last element
+			tail = currentElement.prior;
+			currentElement = tail;
+			currentElement.next = null;
+		} else {													//Remove element in middle
+			currentElement.prior.next = currentElement.next;
+			currentElement.next.prior = currentElement.prior;
+		}
+		size--;
+		return this;
 	}
 
 
@@ -118,7 +143,7 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	 *	    					the last element in list with value < d
 	 **/
 	public boolean find(E d){				// Why no recursion? Is way better..
-		currentElement = head;				// current points to the last element in list with value < d????
+		goToFirst();						// current points to the last element in list with value < d????
 		for(int i = 0; i < size; i++) {
 			if (currentElement.data == d) {
 				return true;
@@ -186,10 +211,15 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	 *	@postcondition - A deep-copy of list has been returned.
 	 **/
 	public ListInterface<E> clone(){
-		//create new list
-		//Loop through the list
-		// clone each element and add to new list
-		// Current can't change. Exact clone.
+		List clone = new List();
+		E currentElementClone = currentElement.data.clone();
+		goToFirst();
+		for (int i = 0; i < size; i++) {
+			insert(currentElement.data.clone());
+			goToNext();
+		}
+		clone.find(currentElementClone);		//This causes the currentElement to equal the parameter
+		return clone;
 	}
 
 	private class Node {

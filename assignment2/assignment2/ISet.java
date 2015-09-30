@@ -27,7 +27,6 @@ package assignment2;
 // Change
 
 public interface ISet<E extends Data<E>> extends Clonable<ISet<E>> {
-	//public static int MAX_AMOUNT_IDENTIFIERS = 20;
 	
 	/**Initializes a set
 	 * @precondition
