@@ -15,15 +15,15 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	private int size;
 	
 	List(){
-		//Default constructor
+		this.size = 0;
 	}
 	
 	/**	@precondition -
 	 *  @postcondition - FALSE: list is not empty.
 	 *  				TRUE:  list is empty.
 	 **/
-	public boolean isEmpty(){
-		if(head == null) {
+	public boolean isEmpty(){				
+		if(size == 0) {
 			return true;
 		} else {
 			return false;
@@ -34,7 +34,12 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	 *	@postcondition - list-POST is empty and has been returned.
 	 **/
 	public List<E> init(){
-		
+		list = null;
+		head = null;
+		tail = null;
+		currentElement = null;
+		size = 0;
+		return this;
 	}
 
 	/**	@precondition  -
@@ -51,12 +56,26 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	 **/
 	public ListInterface<E> insert(E d){
 		if(isEmpty()) {
-			currentElement = head = tail = new Node(d, list, null);
+			currentElement = head = tail = new Node(d, list, null);		// Watch for reference errors
 		} else {
-			// Check waar het element in de lijst moet door compareTO
-			// Voeg het aan de lijst toe op de goede plek
+			currentElement = head;
+			Node newNode = new Node(d);
+			for(int i = 0; i < size; i++) {
+				if(currentElement.data.compareTo(newNode.data) > 0) {		// Watch if it should be smaller or bigger
+					goToNext();
+				} else if(currentElement.data.compareTo(newNode.data) > 0) {
+					return this;
+				} else {
+					newNode.prior = currentElement.prior;
+					newNode.next = currentElement;
+					currentElement.prior.next = newNode;
+					currentElement.prior = newNode;
+					break;
+				}
+			}
 		}
 		size++;
+		return this;
 	}
 
 
@@ -104,7 +123,7 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 			if (currentElement.data == d) {
 				return true;
 			}
-			currentElement = currentElement.next;
+			goToNext();
 		}
 		return false;
 	}
@@ -167,7 +186,10 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	 *	@postcondition - A deep-copy of list has been returned.
 	 **/
 	public ListInterface<E> clone(){
-		
+		//create new list
+		//Loop through the list
+		// clone each element and add to new list
+		// Current can't change. Exact clone.
 	}
 
 	private class Node {

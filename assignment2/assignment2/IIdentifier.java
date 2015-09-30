@@ -58,4 +58,8 @@ public interface IIdentifier extends Data<IIdentifier>{
 	 * @return boolean
 	 **/
 	boolean equals(Identifier id);
+	
+	Identifier clone();
+	
+	int compareTo(Identifier identifier);			//Not sure if this is correct..
 }

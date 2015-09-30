@@ -10,8 +10,24 @@ package assignment2;
  * 		All natural numbers including zero
  * @constructor		
  *		//What should be constructed? A stringbuffer?
+ *		
+ *		INaturalNumber()
+ *			- 0
+ *
+ *		new StringBuffer('0');
  */
-public interface INaturalNumber {
+public interface INaturalNumber extends Data<INaturalNumber>{			
 	//Which functions are needed?
 	//looks like identifier except for pre and post condition
+	
+	char getNumber();
+	
+	
+	void addNumber(char c);
+	
+	void removeNumber(char c);			//Is this the best way or is index better?
+	
+	boolean compareTo();
+	
+	INaturalNumber clone();
 }

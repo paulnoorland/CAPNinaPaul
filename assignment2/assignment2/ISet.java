@@ -8,7 +8,7 @@ package assignment2;
 * @structure 
 *	None 
 * @domain
-*	Minimum of 0 and maximum of 20 identifiers per set.
+*	All elements of type data including the empty set
 * @constructor
 *	Set();
 *	    <dl>
@@ -26,8 +26,8 @@ package assignment2;
 
 // Change
 
-public interface ISet<E extends Data<E>> extends Clonable<ISet> {
-	public static int MAX_AMOUNT_IDENTIFIERS = 20;
+public interface ISet<E extends Data<E>> extends Clonable<ISet<E>> {
+	//public static int MAX_AMOUNT_IDENTIFIERS = 20;
 	
 	/**Initializes a set
 	 * @precondition
@@ -44,7 +44,7 @@ public interface ISet<E extends Data<E>> extends Clonable<ISet> {
 	 * A copy of an identifier from the set is returned
 	 * @return Identifier
 	 */
-	Identifier getIdentifier();
+	E getIdentifier();
 	
 	/** Adds an identifier to the set
 	 * @precondition
@@ -53,7 +53,7 @@ public interface ISet<E extends Data<E>> extends Clonable<ISet> {
 	 * The input identifier is now part of the set
 	 * @param identifier
 	 */
-	void addIdentifier(Identifier identifier);
+	void addIdentifier(E identifier);
 	
 	/** Returns the length of the set
 	 * @precondition
@@ -80,7 +80,7 @@ public interface ISet<E extends Data<E>> extends Clonable<ISet> {
 	 * An element identifier has been removed from the set
 	 * @param identifier
 	 */
-	void removeIdentifier(Identifier identifier);
+	void removeIdentifier(E identifier);
 	
 	/** Returns the union of the set and the input set
 	 * @precondition										
@@ -92,7 +92,7 @@ public interface ISet<E extends Data<E>> extends Clonable<ISet> {
 	 * @return
 	 * The union of the set and the input set
 	 */
-	ISet<E> union(ISet<E> set) throws Exception;
+	ISet<E> union(ISet<E> set);
 	
 	// Descibe the operations
 	
@@ -128,5 +128,5 @@ public interface ISet<E extends Data<E>> extends Clonable<ISet> {
 	 * @return
 	 * The symmetric difference between the set and the input set
 	 */
-	Set symmetricDifference(Set set) throws Exception;
+	Set symmetricDifference(Set set);
 }

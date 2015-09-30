@@ -29,7 +29,17 @@ public class Identifier implements IIdentifier {
 		return false;
 	}
 
-	
+	@Override
+	public IIdentifier clone() {				// Is IIdentifier correct
+		
+		return null;
+	}
+
+	@Override
+	public int compareTo(IIdentifier o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 	
 }
