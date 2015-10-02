@@ -8,7 +8,6 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	 */
 
 	//TODO: What happens with elements with a key that's already in the list?????
-	Node list;
 	Node currentElement;
 	Node head;				// points to first element of the list
 	Node tail;				// points to last element of the list
@@ -16,8 +15,7 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	private int size;
 	
 	List(){
-		list = head;
-		this.size = 0;
+		init();
 	}
 	
 	/**	@precondition -
@@ -25,11 +23,7 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	 *  				TRUE:  list is empty.
 	 **/
 	public boolean isEmpty(){				
-		if(size == 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return (size == 0);	
 	}
 
 	/** @precondition  -
@@ -53,8 +47,8 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	private void placeNode(Node newNode, Node before, Node after) {
 		newNode.prior = before;
 		newNode.next = after;
-		before.next = newNode;
 		after.prior = newNode;
+		before.next = newNode;
 	}
 	
 	/** @precondition  -
@@ -64,16 +58,16 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	 **/
 	public ListInterface<E> insert(E d){
 		if(isEmpty()) {													// EMPTY LIST
-			currentElement = head = tail = new Node(d.clone(), list, null);		// Watch for reference errors
+			currentElement = head = tail = new Node(d.clone(), null, null);		// Watch for reference errors
 		} else {
 			goToFirst();
 			Node newNode = new Node(d.clone());
 			if(newNode.data.compareTo(currentElement.data) < 0) {		// Add in front
-				placeNode(newNode, list, currentElement);
+				placeNode(newNode, null, currentElement);
 				head = newNode;
 			} else {
-				for(int i = 0; i < size; i++) {							// Add in the middle
-					if(currentElement.data.compareTo(newNode.data) > 0) {
+				for(int i = 1; i < size; i++) {							// Add in the middle
+					if(currentElement.data.compareTo(newNode.data) < 0) {
 						goToNext();
 					} else {
 						placeNode(newNode, currentElement.prior, currentElement);
@@ -113,9 +107,9 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 		if(size == 1) {												//Remove the only element
 			head = tail = currentElement = null;
 		} else if(currentElement == head) {							//Remove first element
-			currentElement.prior = list;
-			list = currentElement.next;
-			currentElement = head = list.next;
+			head = currentElement.next;
+			head.prior = null;
+			currentElement = head;
 		} else if(currentElement == tail) {							//Remove last element
 			tail = currentElement.prior;
 			currentElement = tail;
