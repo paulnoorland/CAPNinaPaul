@@ -4,7 +4,7 @@ package assignment2;
 *
 * @author Nina Lijzinga & Paul Noorland
 * @elements
-*	Identifiers of type Identifier
+*	Any type of elements
 * @structure 
 *	None 
 * @domain
@@ -13,7 +13,7 @@ package assignment2;
 *	Set();
 *	    <dl>
 *		<dt><b>PRE-condition</b><dd>-
-*		<dt><b>POST-condition</b><dd>The new set contains 0 identifiers and has room for 20
+*		<dt><b>POST-condition</b><dd>The new set contains 0 elements
 *	    </dl>
 *	<br>
 *	Set(Set set);
@@ -23,8 +23,6 @@ package assignment2;
 *		The new set is a copy of the input set
 *	    </dl>
 **/
-
-// Change
 
 public interface ISet<E extends Data<E>> extends Clonable<ISet<E>> {
 	
@@ -36,23 +34,34 @@ public interface ISet<E extends Data<E>> extends Clonable<ISet<E>> {
 	 */
 	void init();
 	
-	/** Returns an identifier
+	/** Returns an element
 	 * @precondition
 	 * Set is non-empty
 	 * @postcondition
-	 * A copy of an identifier from the set is returned
+	 * A copy of an element from the set is returned
 	 * @return Identifier
 	 */
-	E getIdentifier();
+	E getElement();
 	
-	/** Adds an identifier to the set
+	/** Returns whether an element is in the set
 	 * @precondition
-	 * Set is not full or identifier is already part of the set
+	 * -
 	 * @postcondition
-	 * The input identifier is now part of the set
-	 * @param identifier
+	 * 	returns:
+	 * 		TRUE: 	if the set contains the element
+	 * 		FALSE: 	if the set does not contain the element
+	 * @return boolean
 	 */
-	void addIdentifier(E identifier);
+	boolean hasElement(E element);
+	
+	/** Adds an element to the set
+	 * @precondition
+	 * Element is already in the set							//Is this a pre condition??
+	 * @postcondition
+	 * The input element is now part of the set
+	 * @param element
+	 */
+	void addElement(E element);
 	
 	/** Returns the length of the set
 	 * @precondition
@@ -72,28 +81,35 @@ public interface ISet<E extends Data<E>> extends Clonable<ISet<E>> {
 	 */
 	boolean isEmpty();
 	
-	/**Removes an identifier from the set
+	/**Removes an element from the set
 	 * @precondition
 	 * Set is not empty
 	 * @postcondition
-	 * An element identifier has been removed from the set
-	 * @param identifier
+	 * An element has been removed from the set
+	 * @param element
 	 */
-	void removeIdentifier(E identifier);
+	void removeElement(E element);
+	
+	/** Returns a deep copy of the set
+	 * @precondition
+	 * -
+	 * @postcondition
+	 * A deep copy of the set has been returned
+	 * @return ISet<E>
+	 * 
+	 */
+	ISet<E> clone();
 	
 	/** Returns the union of the set and the input set
 	 * @precondition										
 	 * -
 	 * @postcondition
-	 * SUCCESS: A new set containing the identifiers of the set and the input set has been returned
-	 * FAILURE: The resulting set of the operation is larger than 20 identifiers
+	 * SUCCESS: A new set containing the elements of the set and the input set has been returned
 	 * @param set
 	 * @return
 	 * The union of the set and the input set
 	 */
-	ISet<E> union(ISet<E> set);
-	
-	// Descibe the operations
+	ISet<E> union(ISet<E> s2);
 	
 	/** Returns the difference between the set and the input set
 	 * @precondition
@@ -104,7 +120,7 @@ public interface ISet<E extends Data<E>> extends Clonable<ISet<E>> {
 	 * @return
 	 * The difference between the set and the input set
 	 */
-	Set difference(Set set);
+	ISet<E> difference(ISet<E> s2);
 	
 	/** Returns the intersection of the set and the input set
 	 * @precondition										
@@ -115,17 +131,16 @@ public interface ISet<E extends Data<E>> extends Clonable<ISet<E>> {
 	 * @return
 	 * The intersection of the set and the input set
 	 */
-	Set intersection(Set set);
+	ISet<E> intersection(ISet<E> s2);
 	
 	/** Returns the symmetric difference between the set and the input set
 	 * @precondition
 	 * -
 	 * @postcondition
 	 * SUCCESS: A new set containing the identifiers of the set and the input set which are not in the intersection has been returned
-	 * FAILURE: The resulting set of the operation is larger than 20 identifiers
 	 * @param set
 	 * @return
 	 * The symmetric difference between the set and the input set
 	 */
-	Set symmetricDifference(Set set);
+	ISet<E> symmetricDifference(ISet<E> s2);
 }

@@ -1,6 +1,6 @@
 package assignment2;
 
-public class NaturalNumber implements INaturalNumber{
+public class NaturalNumber<E extends Data<E>> implements INaturalNumber{
 	//The append method always adds these characters at the end of the buffer; 
 	//the insert method adds the characters at a specified point.
 	
