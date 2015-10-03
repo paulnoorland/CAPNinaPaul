@@ -47,8 +47,8 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	private void placeNode(Node newNode, Node before, Node after) {
 		newNode.prior = before;
 		newNode.next = after;
-		after.prior = newNode;
-		before.next = newNode;
+		if(after != null) after.prior = newNode;
+		if(before != null) before.next = newNode;
 	}
 	
 	/** @precondition  -
@@ -56,17 +56,18 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	 *    				current points to the newly added element.
 	 *   				list-POST has been returned.
 	 **/
-	public ListInterface<E> insert(E d){
+	public ListInterface<E> insert(E d){			//What has to be current element?
 		if(isEmpty()) {													// EMPTY LIST
 			currentElement = head = tail = new Node(d.clone(), null, null);		// Watch for reference errors
 		} else {
 			goToFirst();
-			Node newNode = new Node(d.clone());
+			Node newNode = new Node(d.clone(), null, null);
 			if(newNode.data.compareTo(currentElement.data) < 0) {		// Add in front
 				placeNode(newNode, null, currentElement);
 				head = newNode;
 			} else {
-				for(int i = 1; i < size; i++) {							// Add in the middle
+				int j;
+				for(j = 1; j < size; j++) {							// Add in the middle
 					if(currentElement.data.compareTo(newNode.data) < 0) {
 						goToNext();
 					} else {
@@ -74,9 +75,12 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 						break;
 					}
 				}
-				placeNode(newNode, currentElement, null); 				// Add to end //Check if this works because of null.prior
-				tail = newNode;
+				if (j == size) {											// Better solution please Sebas
+					placeNode(newNode, currentElement, null); 				// Add to end //Check if this works because of null.prior
+					tail = newNode;
+				}
 			}
+			currentElement = newNode;		//too dirty? Was needed for the go to next...
 		}
 		size++;
 		return this;
@@ -117,6 +121,7 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 		} else {													//Remove element in middle
 			currentElement.prior.next = currentElement.next;
 			currentElement.next.prior = currentElement.prior;
+			currentElement = currentElement.next;
 		}
 		size--;
 		return this;
@@ -139,7 +144,7 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	public boolean find(E d){				// Why no recursion? Is way better..
 		goToFirst();						// current points to the last element in list with value < d????
 		for(int i = 0; i < size; i++) {
-			if (currentElement.data == d) {
+			if (currentElement.data == d) {			// Is this correct or should we use compareTo
 				return true;
 			}
 			goToNext();
@@ -205,7 +210,7 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	 *	@postcondition - A deep-copy of list has been returned.
 	 **/
 	public ListInterface<E> clone(){
-		List clone = new List();
+		List<E> clone = new List<E>();
 		E currentElementClone = currentElement.data.clone();
 		goToFirst();
 		for (int i = 0; i < size; i++) {
