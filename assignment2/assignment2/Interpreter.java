@@ -6,7 +6,13 @@ import java.util.regex.Pattern;
 
 
 public class Interpreter<E> {
-	
+	public static final char	INTERSECT = '*',
+								UNION = '+',
+								COMPLEMENT = '-',
+								SYMMETRIC_DIFFERENCE = '|',
+								COMMENT = '/',
+								RESULT = '?';
+						
 	Scanner in = new Scanner(System.in);
 	PrintStream out = new PrintStream(System.out);
 	
