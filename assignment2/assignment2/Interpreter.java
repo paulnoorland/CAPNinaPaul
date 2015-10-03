@@ -4,7 +4,8 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-public class Interpreter {
+
+public class Interpreter<E> {
 	
 	Scanner in = new Scanner(System.in);
 	PrintStream out = new PrintStream(System.out);
