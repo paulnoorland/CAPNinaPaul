@@ -10,56 +10,75 @@ package assignment2;
  * 		All sequences begin with a letter, 
  * 		are alphanumeric and have a length of at least 1 character.
  * @constructor		
- * 		Identifier(String string);			
+ * 		Identifier(String s);			//Waarschijnlijk moeten we geen stringbuffer meegeven toch? Alsnog een string meegeven en dan in de identifierclass 
+ * 										//er een string van maken? Of geen arguments meegeven aan constructor en dan een append methode erin doen
  * 			<dl>
- * 				<dt><b>PRE-condition</b><dd>String is valid identifier
- * 				<dt><b>POST-condition</b><dd>The new Identifier object
- * 				contains a string from the source.
+ * 				<dt><b>PRE-condition</b><dd>String is valid element
+ * 				<dt><b>POST-condition</b><dd>The new element object
+ * 				contains a stringBuffer comparable to the source string.
  *			</dl>
  *		<br>
  *		Identifier(Identifier id1);
  *			<dl>
  *				<dt><b>PRE-condition</b><dd>-
- *				<dt><b>POST-condition</b><dd> The new Identifier is a copy of the source identifier</dl>
+ *				<dt><b>POST-condition</b><dd> The new element is a copy of the source element</dl>
  *			</dl>
  *		<br>				
  **/
 
-// Change ADT
 
 public interface IIdentifier extends Data<IIdentifier>{	
-	/**Initializes an identifier
+	/**Initializes an element
 	 * @precondition
-	 * -
+	 * String is valid element
 	 * @postcondition
-	 * The new Identifier object contains a string from the source.
+	 * The new element object contains a string from the source.
 	 */
 	void init(String string);
 	
-	/** Returns the string saved in the Identifier
+
+	/** Adds an character to the end of the StringBuffer
 	 * @precondition
-	 * 		-
+	 * 		The character is alphanumeric and follows the rules of an element
 	 * @postcondition
-	 * 		A string representation of the identifier is returned
-	 **/
-	String getString();
+	 * 		The input character is appended to the end of the StringBuffer
+	 * @param Character of type char
+	 */
+	public void appendChar(char c);
 	
-	/** Compares identifier to the input identifier.
+	/** Returns the stringBuffer saved in the Element
 	 * @precondition
 	 * 		-
 	 * @postcondition
-	 * 		a boolean has been returned.
-	 * 		true:
-	 * 			The identifier and the input identifier contain the exact same sequence of characters
-	 * 		false:
-	 * 			The input identifier and this identifier are not equal.
+	 * 		A stringBuffer representation of the element is returned
+	 **/
+	
+	StringBuffer getStringBuffer();
+	
+	/** Compares element to the input element.
+	 * @precondition
+	 * 		-
+	 * @postcondition
+	 * 		an integer has been returned
+	 * 		0:
+	 * 			The element and the input element contain the exact same sequence of characters
+	 * 		1:
+	 * 			The input element and this element are not exactly the same.
 	 * 
-	 * @param identifier
-	 * @return boolean
+	 * @param IIdentifier
+	 * @return integer
 	 **/
-	boolean equals(Identifier id);
+	public int compareTo(IIdentifier i);
 	
-	Identifier clone();
 	
-	int compareTo(Identifier identifier);			//Not sure if this is correct..
+	/** Creates a deep clone of the IIdentifier
+	 * @precondition
+	 * 		The IIdentifier is clonable 		//Is dit altijd zo bij een IIdentifier?
+	 * @postcondition
+	 * 		a copy of this Identifier has been returned
+	 * @return IIdentifier
+	 */
+	public IIdentifier clone();
+
+	
 }

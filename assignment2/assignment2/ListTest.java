@@ -14,7 +14,6 @@ public class ListTest {
         // Add any maintenance which is necessary to set up your tests.
     }
 
-    /*
     @Test
     public void testIsEmpty() {
         // Test an empty list.
@@ -71,10 +70,7 @@ public class ListTest {
         assertEquals("Init should set size to zero", 0, list.size());
 
         // TODO: You can add more of your own tests.
-    }
-
-    */
-    
+    }    
     
     @Test
     public void testInsert() {
@@ -129,7 +125,7 @@ public class ListTest {
         // Insert duplicate item.
     }
 
-   /* @Test
+    @Test
     public void testRetrieve() {
 
         List<Letter> list = new List<>();
@@ -292,7 +288,6 @@ public class ListTest {
 
         // TODO: You can add more of your own tests.
     }
-	*/
 
     /**
      * Represents a comparable and clonable Letter.

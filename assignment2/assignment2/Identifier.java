@@ -2,48 +2,45 @@ package assignment2;
 
 public class Identifier implements IIdentifier {
 	
-	private String string;
+	private StringBuffer s;
 	
 	public Identifier(String string){
-		this.string = string;
+		StringBuffer temp = new StringBuffer();
+		temp.append(string);
+		s = temp;
 	}
 	
 	public Identifier(Identifier identifier){
-		string = identifier.getString();
+		s = identifier.getStringBuffer();
 	}
 	
 	public void init(String string) {
-		this.string = string;		
+		StringBuffer temp = new StringBuffer();
+		temp.append(string);
+		s = temp;	
 	}
 
 	@Override
-	public String getString() {
-		return string;
+	public StringBuffer getStringBuffer() {
+		return s;
 	}
 
 	@Override
-	public boolean equals(Identifier identifier) {
-		if (getString().equals(identifier.getString())){
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public Identifier clone() {				// Is IIdentifier correct
-		
-		return null;
+	public IIdentifier clone() {
+		IIdentifier result = new Identifier(s.substring(0)); 
+		return result;
 	}
 
 	@Override
 	public int compareTo(IIdentifier o) {
-		// TODO Auto-generated method stub
-		return 0;
+		if (s.equals(o.getStringBuffer())) return 0;
+		return 1;	//moet er ook een <0 gereturned worden hier? Hoe is een string groter/kleiner dan een andere string?
 	}
 
 	@Override
-	public int compareTo(Identifier identifier) {
-		// TODO Auto-generated method stub
-		return 0;
+	public void appendChar(char c) {
+		s.append(c);
+		
 	}
+
 }
