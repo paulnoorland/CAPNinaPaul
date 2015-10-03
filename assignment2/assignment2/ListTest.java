@@ -13,7 +13,7 @@ public class ListTest {
 
         // Add any maintenance which is necessary to set up your tests.
     }
-
+    
     @Test
     public void testIsEmpty() {
         // Test an empty list.
@@ -287,6 +287,39 @@ public class ListTest {
         assertEquals(a, list.retrieve());
 
         // TODO: You can add more of your own tests.
+    }
+    
+    @Test
+    public void testClone() {
+    	List<Letter> list = new List<>();
+
+        // Test on empty list
+        assertFalse(list.goToNext());
+
+        Letter a = new Letter('a');
+        Letter b = new Letter('b');
+        Letter c = new Letter('c');
+        Letter d = new Letter('d');
+        list.insert(a);
+        list.insert(b);
+        list.insert(c);
+        list.insert(d);
+        
+        list.find(c);					//Sets current element to c
+        
+        List<Letter> cloneList = (List<Letter>) list.clone();
+        
+        assertEquals(c, cloneList.retrieve());					//Looks if current element is copied correctly
+        
+        cloneList.goToFirst();
+        assertEquals(a, cloneList.retrieve());
+        cloneList.goToNext();
+        assertEquals(b, cloneList.retrieve());
+        cloneList.goToNext();
+        assertEquals(c, cloneList.retrieve());
+        cloneList.goToNext();
+        assertEquals(d, cloneList.retrieve());
+        assertFalse(cloneList.goToNext());
     }
 
     /**
