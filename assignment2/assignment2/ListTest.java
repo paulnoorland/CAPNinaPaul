@@ -70,8 +70,8 @@ public class ListTest {
         assertEquals("Init should set size to zero", 0, list.size());
 
         // TODO: You can add more of your own tests.
-    }
-
+    }    
+    
     @Test
     public void testInsert() {
         List<Letter> list = new List<>();
@@ -288,7 +288,6 @@ public class ListTest {
 
         // TODO: You can add more of your own tests.
     }
-
 
     /**
      * Represents a comparable and clonable Letter.
