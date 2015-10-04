@@ -5,8 +5,14 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 
-public class Interpreter<E> {
-	
+public class Interpreter {
+	public static final char	INTERSECT = '*',
+								UNION = '+',
+								COMPLEMENT = '-',
+								SYMMETRIC_DIFFERENCE = '|',
+								COMMENT = '/',
+								RESULT = '?';
+						
 	Scanner in = new Scanner(System.in);
 	PrintStream out = new PrintStream(System.out);
 	
@@ -54,11 +60,7 @@ public class Interpreter<E> {
 			throw new APException("Not end of the line");
 		}
 	}
-	
-	public void parse(List list){
-		
-	}
-	
+
 	Set factor(Scanner scanner) throws APException {
 		Set result = new Set();
 		if (nextCharIsLetter(in)) {
@@ -76,32 +78,54 @@ public class Interpreter<E> {
 		} else throw new APException("Wrong character");
 		return result;
 	}
+	boolean isAlphanumeric(String string) {
+		for (int i = 0; i < string.length(); i++) {
+			char temp = string.charAt(i);
+			if (!(Character.isDigit(temp) || Character.isLetter(temp)))
+				return false;
+		}
+		return true;
+	}
+
+	private boolean checkIdentifierFormat(String string) {
+		if (!Character.isLetter(string.charAt(0)) || !isAlphanumeric(string)
+				|| !(string.length() > 0))
+			return false;
+		return true;
+	}
 	
-	void saveVariable(Scanner scanner){
+	void saveVariable(Scanner scanner) throws Exception{
 		//the first identifier is the key, the answer to the factor/the set is the value
 		String key = scanner.next();
-		try {
-			Set value = factor();
-		} catch (APException e) {
-			System.out.print(e.getMessage());
-		}
+		System.out.print(key);
+		//The next 'thing' should be an '='
+	
 		//add key-value to the dictionary
 		//dictionary.add(key, value);
+	}
+	
+	void parse(Scanner scanner, String first) throws Exception{
+		if (Character.isLetter(first.charAt(0))){
+			saveVariable(scanner);	//klopt geloof ik
+		} else if (first.charAt(0) == COMMENT){
+			//nothing should happen
+		} else if (first.charAt(0) == RESULT){
+			//you have to do calculations now, then print something (call factor).
+		} else if (first.charAt(0) == ' ');
+		else throw new Exception("Wrong input; a new line should start with an Identifier, a '/' for comment or a '?' for printing");
+		
 	}
 
 	void start() {
 		while(in.hasNextLine()){
 			String program = in.nextLine();
-			Scanner statementScanner = new Scanner(program);
-			
-			if (nextCharIsLetter(statementScanner)){
-				saveVariable(statementScanner);	//klopt geloof ik
-			} else if (nextCharIs(statementScanner, '/')){
-				//nothing should happen
-			} else if (nextCharIs(statementScanner, '?')){
-				System.out.print(statementScanner.next());
-				//you have to do calculations now, then print something (call factor).
+			Scanner scanner = new Scanner(program);
+			try {
+				parse(scanner);
+			} catch (Exception e) {
+				System.out.print(e.getMessage());
 			}
+
 		}
 	}
 	
