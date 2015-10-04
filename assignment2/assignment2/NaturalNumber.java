@@ -1,8 +1,6 @@
 package assignment2;
 
 public class NaturalNumber<E extends Data<E>> implements INaturalNumber{
-	//The append method always adds these characters at the end of the buffer; 
-	//the insert method adds the characters at a specified point.
 	
 	private StringBuffer number;
 	
@@ -19,9 +17,10 @@ public class NaturalNumber<E extends Data<E>> implements INaturalNumber{
 	}
 	
 	public void addNumber(char c){
-		if(number.charAt(0) == 0) {
-			number.insert(0, c);
+		if(getLength() == 0 || !(number.charAt(0) == '0')) {
+			number.append(c);
 		} else {
+			number.deleteCharAt(0);
 			number.append(c);
 		}
 	}
