@@ -5,11 +5,12 @@ package assignment2;
 *
 * @author Nina Lijzenga & Paul Noorland
 * @elements
-*	Elements of the type DictionaryElements 
+*	Pairs of keys of type K and values of type V 
 * @structure 
-*	Lineair
+*	none
 * @domain
 *	All elements of type Dictionary including an empty list
+*   Unique keys
 * @constructor
 *	Dictionary();
 *	    <dl>
@@ -18,7 +19,7 @@ package assignment2;
 *	    </dl>
 *	<br>
 **/
-public interface IDictionary<K extends Data<K>, V extends Clonable<V>> {
+public interface IDictionary<K extends Data<K>, V extends Clonable<V>>  { // clonable
 	// Key value storage in a linked list
 	
 	/**Initializes a dictionary
@@ -33,12 +34,12 @@ public interface IDictionary<K extends Data<K>, V extends Clonable<V>> {
 	 * @precondition
 	 * 		The key-value pair is in the dictionary
 	 * @postcondition
-	 * 		The Value that is linked to the input key is returned
+	 * 		A copy of the value that is linked to the input key is returned
 	 * @param key
 	 * @return value
 	 */
 	
-	public V getValue(K key) throws Exception;
+	public V getValue(K key) throws APException;
 	
 	/**adds an key-value pair to the dictionary
 	 * @precondition
@@ -57,7 +58,7 @@ public interface IDictionary<K extends Data<K>, V extends Clonable<V>> {
 	 * 		the key-value pair that was linked to the input key in the dictionary has been removed from the dictionary
 	 * @param key
 	 */
-	public void remove(K key) throws Exception;
+	public void remove(K key) throws APException;
 	
 	/**Returns whether a key-value pair is in the dictionary
 	 * @precondition

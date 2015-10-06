@@ -8,8 +8,8 @@ public class NaturalNumber<E extends Data<E>> implements INaturalNumber{
 		number = new StringBuffer();
 	}
 	
-	public StringBuffer getNumber(){
-		return number;
+	public String getNumber(){
+		return number.toString();
 	}
 	
 	public int getLength() {
@@ -25,18 +25,14 @@ public class NaturalNumber<E extends Data<E>> implements INaturalNumber{
 		}
 	}
 	
-	public boolean isEmpty(){
-		return (number.length() == 0);
-	}
-	
-	public NaturalNumber clone(){
+	public INaturalNumber clone(){
 		NaturalNumber copy = null;						// Must be initialized..
 		try {
 			copy = (NaturalNumber)super.clone();
-		} catch (CloneNotSupportedException e) {		// Is this the correct way?
+		} catch (CloneNotSupportedException e) {		
 			e.printStackTrace();
 		}
-		copy.number = this.number;
+		copy.number = new StringBuffer(this.number);
 		return copy;
 	}
 	

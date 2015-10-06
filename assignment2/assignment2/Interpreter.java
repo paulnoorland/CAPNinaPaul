@@ -104,7 +104,7 @@ public class Interpreter {
 		//dictionary.add(key, value);
 	}
 	
-	void parse(Scanner scanner, String first) throws Exception{
+	void parse(Scanner scanner) throws Exception{
 		if (Character.isLetter(first.charAt(0))){
 			saveVariable(scanner);	//klopt geloof ik
 		} else if (first.charAt(0) == COMMENT){
