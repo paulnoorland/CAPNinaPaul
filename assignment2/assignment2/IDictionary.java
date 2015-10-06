@@ -1,6 +1,5 @@
 package assignment2;
 
-
 /** ADT for the class Dictionary.
 *
 * @author Nina Lijzenga & Paul Noorland
@@ -20,8 +19,7 @@ package assignment2;
 *	<br>
 **/
 public interface IDictionary<K extends Data<K>, V extends Clonable<V>>  { // clonable
-	// Key value storage in a linked list
-	
+
 	/**Initializes a dictionary
 	 * @precondition
 	 * -
@@ -38,7 +36,6 @@ public interface IDictionary<K extends Data<K>, V extends Clonable<V>>  { // clo
 	 * @param key
 	 * @return value
 	 */
-	
 	public V getValue(K key) throws APException;
 	
 	/**adds an key-value pair to the dictionary
