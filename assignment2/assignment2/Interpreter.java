@@ -5,127 +5,166 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 
+
+//er zijn nu een heleboel ISets, moet dit veranderen in normale sets?
 public class Interpreter {
 	public static final char	INTERSECT = '*',
 								UNION = '+',
 								COMPLEMENT = '-',
 								SYMMETRIC_DIFFERENCE = '|',
 								COMMENT = '/',
-								RESULT = '?';
+								PRINT = '?',
+								COMPLEX_FACTOR_OPEN = '(',
+								COMPLEX_FACTOR_CLOSE = ')',
+								SET_OPEN = '{',
+								SET_CLOSE = '}';
 						
 	Scanner in = new Scanner(System.in);
 	PrintStream out = new PrintStream(System.out);
 	
-	/*First, completely write-out the parser part of your design. Which means, write a program that reads 
-	 *lines of input, and does nothing in case of a correct command, but returns a clear error-message in 
-	 *case there are incorrect commands.
-	 */
+	Dictionary<IIdentifier, ISet<INaturalNumber>> dict;
 	
-	/*Only when the parser works, must you proceed to extend it to an interpreter. The interpreter must 
-	 * recognize and execute commands written in the command-language specified below. 
-	 */
-	
-	private char nextChar (Scanner in) {
-	    return in.next().charAt(0);
+	public Interpreter(){
+		in = new Scanner(System.in);
+		out = new PrintStream(System.out);
+		dict = new Dictionary<IIdentifier, ISet<INaturalNumber>>();
 	}
-	
-	private boolean nextCharIs(Scanner in, char c) {	//Als er iets na de char zit herkent hij hem niet meer..
-	    return in.hasNext(Pattern.quote(c+""));
-	}
-	
-	private boolean nextCharIsDigit (Scanner in) {			// must we use this?
-	    return in.hasNext("[0-9]");
-	}
-	
-	private boolean notZero(Scanner in) throws APException { //Is this the correct way?
-		if(!in.hasNext("[1-9]")) {
-			throw new APException("First number is a 0");
-		}
-		return true;
-	}
-	
-	private boolean nextCharIsLetter (Scanner in) {
-	    return in.hasNext("[a-zA-Z]");
-	}
-	
-	private void character(Scanner input, char c) throws APException{
-		if (!nextCharIs(input, c)) {
-			throw new APException("");
-		}
-		nextChar(input);
-	}
-	
-	private void eoln(Scanner input) throws APException{
-		if(input.hasNext()) {
-			throw new APException("Not end of the line");
-		}
+	char nextChar (Scanner in) {
+		return in.next().charAt(0);
 	}
 
-	Set factor(Scanner scanner) throws APException {
-		Set result = new Set();
-		if (nextCharIsLetter(in)) {
-			//read identifier
-			//retrieve the set that belongs with that identifier
-		} else if (nextCharIs(in, '{')) {
-			
-			//read a set until '}'
-			//then check whether there is an operator or something
-			//save operator, call factor.
-		} else if (nextCharIs(in, '(')) {
-			//determine the set that is the result of the complex factor
-			//Check all chars until a ')' is present
-			//If a ')' doesn't exist throw error.
-		} else throw new APException("Wrong character");
+	boolean nextCharIs(Scanner in, char c) {
+		return in.hasNext(Pattern.quote(c+""));
+	}
+	
+	boolean nextCharIsLetter (Scanner in) {
+		return in.hasNext("[a-zA-Z]");
+	}
+	
+	boolean nextCharIsDigit (Scanner in) {
+		return in.hasNext("[0-9]");
+		}
+	
+	public Identifier checkIdentifier(Scanner in){
+		Identifier temp = new Identifier();
+		while((nextCharIsLetter(in) || nextCharIsDigit(in) && !nextCharIs(in, ' '))){
+			temp.appendChar(nextChar(in));
+		}
+		return temp;
+	}
+
+	void checkAssignment(Scanner in) throws APException{	//still need to work out the spaces!
+		IIdentifier key = checkIdentifier(in);
+		readSpaces(in);
+		
+		if (nextCharIs(in, '=')){
+			nextChar(in);
+			dict.add(key, checkExpression(in));	//add value to dictionary
+		} else throw new APException("Wrong format, '=' expected.");	//nog een extra exception als er een spatie in de identifier zit?
+	}
+	
+	void readSpaces(Scanner in){
+		while(in.hasNext() && nextCharIs(in, ' ')) in.next();
+	}
+	
+	public INaturalNumber readNaturalNumber(Scanner in){
+		INaturalNumber temp = new NaturalNumber<>();			//parameteren met?
+		while(nextCharIsDigit(in) && !nextCharIs(in, ' ')){
+			temp.addNumber(nextChar(in));
+		}
+		return temp;
+	}
+	
+	Set<INaturalNumber> readSet(Scanner in){
+		Set<INaturalNumber> result = new Set<INaturalNumber>();
+		while(!nextCharIs(in, '}')){
+			readSpaces(in);
+			result.addElement(readNaturalNumber(in));
+		}
+		nextChar(in);
+		readSpaces(in);
 		return result;
 	}
-	boolean isAlphanumeric(String string) {
-		for (int i = 0; i < string.length(); i++) {
-			char temp = string.charAt(i);
-			if (!(Character.isDigit(temp) || Character.isLetter(temp)))
-				return false;
-		}
-		return true;
-	}
-
-	private boolean checkIdentifierFormat(String string) {
-		if (!Character.isLetter(string.charAt(0)) || !isAlphanumeric(string)
-				|| !(string.length() > 0))
-			return false;
-		return true;
+	
+	public Set<INaturalNumber> checkFactor(Scanner in) throws APException{
+		readSpaces(in);
+		if(nextCharIsLetter(in)) checkIdentifier(in);
+		else if(nextCharIs(in, COMPLEX_FACTOR_OPEN)){
+			nextChar(in);
+			checkExpression(in);
+		} else if(nextCharIs(in, SET_OPEN)){
+			nextChar(in);
+			return readSet(in);
+		} else if(nextCharIsLetter(in)){
+				
+		} else throw new APException("blablabla"); //<--------------------------------------------
+		return null;	//Hij gaat spasten als je dit niet doet :/
 	}
 	
-	void saveVariable(Scanner scanner) throws Exception{
-		//the first identifier is the key, the answer to the factor/the set is the value
-		String key = scanner.next();
-		System.out.print(key);
-		//The next 'thing' should be an '='
-	
-		//add key-value to the dictionary
-		//dictionary.add(key, value);
-	}
-	
-	void parse(Scanner scanner, String first) throws Exception{
-		if (Character.isLetter(first.charAt(0))){
-			saveVariable(scanner);	//klopt geloof ik
-		} else if (first.charAt(0) == COMMENT){
-			//nothing should happen
-		} else if (first.charAt(0) == RESULT){
-			//you have to do calculations now, then print something (call factor).
-		} else if (first.charAt(0) == ' ');
-		else throw new Exception("Wrong input; a new line should start with an Identifier, a '/' for comment or a '?' for printing");
-		
-	}
-
-	void start() {
-		while(in.hasNextLine()){
-			String program = in.nextLine();
-			Scanner scanner = new Scanner(program);
-			try {
-				parse(scanner);
-			} catch (Exception e) {
-				System.out.print(e.getMessage());
+	public ISet<INaturalNumber> checkTerm(Scanner in)throws APException{	//need a better way to handle spaces probably
+		Set<INaturalNumber> set1 = checkFactor(in);
+		readSpaces(in);
+		if(in.hasNext()){
+			if(nextChar(in) == INTERSECT){
+				Set<INaturalNumber> set2 = checkFactor(in);
+				return set1.intersection(set2);
 			}
-
+		}
+		return set1;
+	}
+	
+	public ISet<INaturalNumber> checkExpression(Scanner in) throws APException{
+		ISet<INaturalNumber> set1 = checkTerm(in);
+		//out.print("Hallo");
+		readSpaces(in);
+		if(in.hasNext()){
+			readSpaces(in);
+			if(nextChar(in) == UNION){
+				ISet<INaturalNumber> set2 = checkTerm(in);
+				return set1.union(set2);
+				
+			} else if(nextChar(in) == COMPLEMENT){	//difference and complement the same?
+				ISet<INaturalNumber> set2 = checkTerm(in);
+				return set1.difference(set2);
+				
+			} else if(nextChar(in) == SYMMETRIC_DIFFERENCE){
+				ISet<INaturalNumber> set2 = checkTerm(in);
+				return set1.symmetricDifference(set2);
+				
+			} else throw new APException("Unexpected input; additive operator ('+' for union, '|' for symmetric difference or '-' for complement) expected.");
+		} else return set1;	
+	}
+	
+	void printExpression(ISet<INaturalNumber> set){
+		System.out.println("{");
+		out.print(set.getLength());
+		//ISet<INaturalNumber> temp = set.clone();		//moet dit, de clone spaced het programma
+		
+		//while(set.getLength() > 0){
+		//	System.out.print(set.getElement().getNumber());
+		//}
+		System.out.print("}");
+	}
+	void checkStatement(Scanner in) throws APException{
+		in.useDelimiter("");
+		if (nextCharIsLetter(in)) checkAssignment(in);
+		else if (nextChar(in) == PRINT) printExpression(checkExpression(in));
+		else if (nextChar(in) == COMMENT);
+		else throw new APException("Wrong format: a new line should start with~~~~");
+	}
+	
+	void start(){
+		while(in.hasNextLine()){
+			readSpaces(in);
+			String line = in.nextLine();
+			Scanner temp = new Scanner(line);
+			temp.useDelimiter("");
+			
+			try {
+				checkStatement(temp);
+			} catch (APException e) {
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 	

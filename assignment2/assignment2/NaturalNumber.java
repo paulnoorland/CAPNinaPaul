@@ -19,7 +19,7 @@ public class NaturalNumber<E extends Data<E>> implements INaturalNumber{
 	}
 	
 	public void addNumber(char c){
-		if(number.charAt(0) == 0) {
+		if(number.length() == 0 || number.charAt(0) == 0) {
 			number.insert(0, c);
 		} else {
 			number.append(c);
