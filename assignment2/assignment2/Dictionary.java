@@ -13,13 +13,13 @@ public class Dictionary<K extends Data<K>, V extends Clonable<V>> implements IDi
 	}
 	
 	@Override
-	public V getValue(K key) throws Exception {
+	public V getValue(K key) throws APException {
 		list.goToFirst();
 		for(int i = 0; i < list.size(); i++){
 			if(list.retrieve().getKey().equals(key)) return list.retrieve().getValue();
 			list.goToNext();
 		}
-		throw new Exception("Key is not in the dictionary");
+		throw new APException("Key is not in the dictionary");
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class Dictionary<K extends Data<K>, V extends Clonable<V>> implements IDi
 		list.insert(temp);	
 	}
 	
-	public void remove(K key) throws Exception{
+	public void remove(K key) throws APException{
 		list.goToFirst();
 		for(int i = 0; i < list.size(); i++){
 			if(list.retrieve().getKey().equals(key)){
@@ -38,7 +38,7 @@ public class Dictionary<K extends Data<K>, V extends Clonable<V>> implements IDi
 			};
 			list.goToNext();
 		}
-		throw new Exception("Key is not in the dictionary");
+		throw new APException("Key is not in the dictionary");
 	}
 	
 	public boolean isInDictionary(K key){

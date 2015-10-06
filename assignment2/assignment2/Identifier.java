@@ -10,6 +10,10 @@ public class Identifier implements IIdentifier {
 		s = temp;
 	}
 	
+	public Identifier(){
+		s = new StringBuffer();
+	}
+	
 	public Identifier(Identifier identifier){
 		s = identifier.getStringBuffer();
 	}
@@ -42,12 +46,4 @@ public class Identifier implements IIdentifier {
 		s.append(c);
 		
 	}
-
-
-
-
-
-	
-	
-	
 }
