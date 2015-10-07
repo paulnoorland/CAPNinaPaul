@@ -34,19 +34,20 @@ public class Set<E extends Data<E>> implements ISet<E>{
 	}
 
 	public void removeElement(E element){
-		set.find(element);
-		set.remove();
+		if(set.find(element)) {
+			set.remove();
+		}
 	}
 	
-	public Set<E> clone() {
+	public ISet<E> clone() {
 		Set<E> clone = new Set<E>();
 		clone.set = (List<E>) set.clone();
 		return clone;
 	}
 	
 	public ISet<E> union(ISet<E> set2){
-		Set<E> union = this.clone();
-		Set<E> copySet2 = (Set<E>) set2.clone();
+		ISet<E> union = this.clone();
+		ISet<E> copySet2 = (Set<E>) set2.clone();
 		while(!copySet2.isEmpty()) {
 			E element = copySet2.getElement();
 			copySet2.removeElement(element);
@@ -58,66 +59,45 @@ public class Set<E extends Data<E>> implements ISet<E>{
 	}
 	
 	public ISet<E> difference(ISet<E> set2) {
-		Set<E> difference = this.clone();
-		difference.set.goToFirst();
-		for (int i = 0; i < difference.getLength(); i++) {
-			Set<E> copySet2 = (Set<E>) set2.clone();
+		ISet<E> difference = this.clone();
+		ISet<E> copySet2 = set2.clone();
 			while (!copySet2.isEmpty()) {
 				E element = copySet2.getElement();
 				copySet2.removeElement(element);
-				if(element.compareTo(difference.getElement()) == 0) {		//compareTo in natural number gives 0 if they are equal
-					difference.removeElement(difference.getElement());
-					i--;
-					break;
+				if(difference.hasElement(element)) {
+					difference.removeElement(difference.getElement());			
 				}
-			}
-			difference.set.goToNext();
 		}
 		return difference;
 	}
 	
 	public ISet<E> intersection(ISet<E> set2){
-		Set<E> copySet1 = this.clone();
-		Set<E> intersection = new Set<E>();
-		copySet1.set.goToFirst();
-		for (int i = 0; i < copySet1.getLength(); i++) {
-			Set<E> copySet2 = (Set<E>) set2.clone();
-			while(!copySet2.isEmpty()){
-				E element = copySet2.getElement();
-				copySet2.removeElement(element);
-				if(element.compareTo(copySet1.getElement()) == 0) {
-					intersection.addElement(copySet1.getElement());
-				}
+		ISet<E> copySet1 = this.clone();
+		ISet<E> copySet2 = (Set<E>) set2.clone();
+		ISet<E> intersection = new Set<E>();
+		
+		while(!copySet2.isEmpty()){
+			E element = copySet2.getElement();
+			copySet2.removeElement(element);
+			if(copySet1.hasElement(element)) {
+				intersection.addElement(element);
 			}
-			copySet1.set.goToNext();
 		}
 		return intersection;
 	}
 	
 	public ISet<E> symmetricDifference(ISet<E> set2){
-		Set<E> intersection = (Set<E>) intersection(set2);
-		Set<E> differenceSet1 = (Set<E>) difference(intersection);
-		Set<E> copySet2 = (Set<E>) set2.clone();
-		copySet2.set.goToFirst();
+		ISet<E> intersection = intersection(set2);
+		ISet<E> symmetricDifference = difference(intersection);		//difference between set1 and intersection
+		ISet<E> copySet2 = set2.clone();
 		
-		for(int i = 0; i < copySet2.getLength(); i++) {
-			Set<E> copyIntersection = intersection.clone();
-			while(!copyIntersection.isEmpty()) {
-				E element = copyIntersection.getElement();
-				copyIntersection.removeElement(element);
-				if(element.compareTo(copySet2.getElement()) == 0) {
-					copySet2.removeElement(copySet2.getElement());
-					i--;
-					break;
-				}
+		while(!copySet2.isEmpty()) {
+			E element = copySet2.getElement();
+			copySet2.removeElement(element);
+			if(!intersection.hasElement(element)) {
+				symmetricDifference.addElement(element);
 			}
-			copySet2.set.goToNext();
 		}
-		copySet2.set.goToFirst();
-		for(int i = 0; i < copySet2.getLength(); i++) {
-			differenceSet1.addElement(copySet2.getElement());
-			copySet2.set.goToNext();
-		}
-		return differenceSet1;
+		return symmetricDifference;
 	}
 }
