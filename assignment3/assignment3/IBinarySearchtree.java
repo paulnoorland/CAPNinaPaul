@@ -2,8 +2,6 @@ package assignment3;
 
 import java.util.Iterator;
 
-import assignment2.Data;
-
 /** ADT for the class BinarySearchtree.
 * @author Nina Lijzenga & Paul Noorland
  * @param <E>
@@ -21,7 +19,7 @@ import assignment2.Data;
 *	    </dl>
 *	<br>
 **/
-public interface IBinarySearchtree<E extends Data<E>> {//extends Clonable<IBinarySearchtree<E>>{ //correct?
+public interface IBinarySearchtree<E extends Data<E>> extends Clonable<IBinarySearchtree<E>>{ 
 
 	/**	@precondition
 	 * -
@@ -60,19 +58,12 @@ public interface IBinarySearchtree<E extends Data<E>> {//extends Clonable<IBinar
 	 *	All elements equal to element are not present in binary searchtree post.
 	 *	Binary search has been returned
 	 **/
-	IBinarySearchtree<E> remove(E element);
-	
-	/**	@precondition
-	 *  Binary searchtree is not empty
-	 *	@postcondition
-	 *	A copy of the smallest element of the binary searchtree has been returned.
-	 **/
-	E smallest();			//Should this be added? necessary to implement remove
+	IBinarySearchtree<E> remove(E element);			
 	
 	/**	@precondition  -
 	 *	@postcondition - A deep copy of the binary search tree has been returned
 	 **/
-	//IBinarySearchtree<E> clone();
+	IBinarySearchtree<E> clone();
 	
 	/**
     * @precondition
@@ -83,8 +74,7 @@ public interface IBinarySearchtree<E extends Data<E>> {//extends Clonable<IBinar
 	* returned.
 	**/
    Iterator<E> ascendingIterator ();
-   
-   
+    
    /**
     * @precondition
     * -

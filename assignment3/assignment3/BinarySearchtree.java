@@ -3,21 +3,14 @@ package assignment3;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import assignment2.Data;
+public class BinarySearchtree<E extends Data<E>> implements IBinarySearchtree<E> {
 
-public class BinarySearchtree<E extends Data<E>> implements IBinarySearchtree<E>{
+	private TreeNode root;
+	private ArrayList<E> list; 
 
-	TreeNode root;
-	
-	BinarySearchtree() {			// No constructor needed right?
-		
+	BinarySearchtree() { // No constructor needed right?
+
 	}
-	
-	// How to make sure that it satisfies requirements of a binary search tree??
-	
-	
-
-
 
 	public boolean isEmpty() {
 		return (root == null);
@@ -29,92 +22,124 @@ public class BinarySearchtree<E extends Data<E>> implements IBinarySearchtree<E>
 	}
 
 	public boolean containsElement(E element) {
-		return contains(this.root, element);		// Is this safe?
+		return contains(this.root, element);
 	}
 
 	private boolean contains(TreeNode root, E element) {
 		if (root == null) {
 			return false;
 		}
-		if (root.data.compareTo(element) > 0) {				// element smaller than root data
+		if (root.data.compareTo(element) > 0) { // element smaller than root
+												// data
 			return contains(root.left, element);
-		} else if (root.data.compareTo(element) == 0)	{
+		} else if (root.data.compareTo(element) == 0) {
 			return true;
-		} else {								//x is bigger than data in the root
+		} else { // x is bigger than data in the root
 			return contains(root.right, element);
 		}
 	}
 
 	public IBinarySearchtree<E> insert(E element) {
-		// TODO Auto-generated method stub
-		return null;
+		root = insert(root, element);
+		return this;
 	}
-	
-	private TreeNode insert(TreeNode root, E element) {		//this doesn't work.. Matty told us this..
-		if (root == null) {				// empty tree
+
+	// New TreeNode is always added to the bottom of the tree because it bubbles down 
+	private TreeNode insert(TreeNode root, E element) { 
+		if (root == null) { 							// empty tree
 			return new TreeNode(element);
 		}
-		//design choice: if x == root.data put x in the right tree
-		if (root.data.compareTo(element) > 0) {
+		if (root.data.compareTo(element) > 0) {		// design choice: if x == root.data put x in the right tree
 			root.left = insert(root.left, element);
-		} else {						//x <= root.data
+		} else { // x >= root.data
 			root.right = insert(root.right, element);
 		}
 		return root;
 	}
 
-
-
-	@Override
 	public IBinarySearchtree<E> remove(E element) {
-		// TODO Auto-generated method stub
-		return null;
+		root = remove(root, element);
+		return this;
 	}
 
+	private TreeNode remove(TreeNode root, E element) {
+		if (root == null) {
+			throw new Error(); 								// Not in tree
+		}
+		if (root.data.compareTo(element) > 0) {
+			root.left = remove(root.left, element);
+		} else if (root.data.compareTo(element) < 0) {
+			root.right = remove(root.right, element);
+		} else { 										// know for sure that x is present
+			// For 0 or 1 child
+			if (root.left == null) {
+				root = root.right; 						// if right is null then node is removed
+			} else if (root.right == null) { 			// Works also for 0 children
+				root = root.right;
+			} else {
+				// 2 children
+				root.data = smallest(root.right); 			// Method that returns smallest value
+				root.right = remove(root.right, root.data);
+			}
+		}
+		return root;
+	}
 
-	@Override
-	public E smallest() {
+	private E smallest(TreeNode root) {
 		return root.left == null ? root.data : smallest(root.left);
 	}
 
-
-	@Override
 	public IBinarySearchtree<E> clone() {
-		// TODO Auto-generated method stub
+		IBinarySearchtree<E> tree = new BinarySearchtree<E>();
+		tree.insert(root.data.clone());
+		
+		// Add function if necessary!!
+		
 		return null;
 	}
-
-
-	@Override
+	
 	public Iterator<E> ascendingIterator() {
-		// TODO Auto-generated method stub
-		
-		// arraylist
-		ArrayList<E> list = new ArrayList<E>();
+		list = new ArrayList<E>();
+		inOrder(root);
 		return list.iterator();
 	}
 	
-	
+	private void inOrder(TreeNode root) {
+		if(root == null) {
+			return;
+		}
+		inOrder(root.left);	
+		list.add(root.data.clone());
+		inOrder(root.right);
+	}
 
-
-	@Override
 	public Iterator<E> descendingIterator() {
-		// TODO Auto-generated method stub
-		return null;
+		list = new ArrayList<E>();
+		reversedOrder(root);
+		return list.iterator();
 	}
 	
+	private void reversedOrder(TreeNode root) {
+		if(root == null) {
+			return;
+		}
+		reversedOrder(root.right);	
+		list.add(root.data.clone());
+		reversedOrder(root.left);
+	}
+
 	private class TreeNode {
-	    E data;
-	    TreeNode left, right;
+		E data;
+		TreeNode left, right;
 
-	    public TreeNode(E d) {
-	        this(d, null, null);
-	    }
+		public TreeNode(E d) {
+			this(d, null, null);
+		}
 
-	    public TreeNode(E data, TreeNode left, TreeNode right) {
-	        this.data = data == null ? null : data;
-	        this.left = left;
-	        this.right = right;
-	    }
+		public TreeNode(E data, TreeNode left, TreeNode right) {
+			this.data = data == null ? null : data;
+			this.left = left;
+			this.right = right;
+		}
 	}
 }
