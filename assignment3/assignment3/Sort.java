@@ -10,7 +10,8 @@ public class Sort {
 	private boolean caseSensitive = true;				//Setting the default values
 	private boolean monotonicallyIncreasing = true;
 	
-	private BinarySearchtree searchTree = new BinarySearchtree();
+	private IBinarySearchtree<IIdentifier> searchTree;
+	//public BinarySearchtree<Identifier> searchTree2;
 	// Can you say here that you want to put identifiers in? How?
 	
 	char nextChar (Scanner in) {
@@ -75,6 +76,7 @@ public class Sort {
 	}
 	
 	public void start(String[] args) {
+		int j = parseOptions(args);
 		for(int i = 0; i < args.length; i++) {
 			if(args[i].equals("-i")) { 
 				this.caseSensitive = false;
@@ -87,7 +89,7 @@ public class Sort {
 					Scanner fileScanner = new Scanner(file);
 					readFile(fileScanner);
 				} catch (FileNotFoundException e) {				// Should it be an APException??
-					e.printStackTrace();
+					System.out.println(e.getMessage());
 				}
 			}	
 		}

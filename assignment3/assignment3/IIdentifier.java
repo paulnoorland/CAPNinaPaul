@@ -76,7 +76,7 @@ public interface IIdentifier extends Data<IIdentifier>{
 	 * 		a copy of this Identifier has been returned
 	 * @return IIdentifier
 	 */
-	public IIdentifier clone();
+	//public IIdentifier clone();
 
 	
 }

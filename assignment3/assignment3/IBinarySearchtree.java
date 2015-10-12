@@ -10,7 +10,7 @@ import assignment2.Data;
 * @elements
 *	Elements of type E
 * @structure 
-*	linear
+*	tree
 * @domain
 *	What should be here???
 * @constructor
@@ -21,7 +21,7 @@ import assignment2.Data;
 *	    </dl>
 *	<br>
 **/
-public interface IBinarySearchtree<E extends Data<E>> extends Iterable<E>, Clonable<IBinarySearchtree<E>>{ //correct?
+public interface IBinarySearchtree<E extends Data<E>> {//extends Clonable<IBinarySearchtree<E>>{ //correct?
 
 	/**	@precondition
 	 * -
@@ -55,9 +55,9 @@ public interface IBinarySearchtree<E extends Data<E>> extends Iterable<E>, Clona
 	IBinarySearchtree<E> insert(E element);
 	
 	/**	@precondition 
-	 * 	The binary searchtree is not empty and contains element
+	 * 	The binary searchtree contains element
 	 *	@postcondition
-	 *	element is not present in binary searchtree post.
+	 *	All elements equal to element are not present in binary searchtree post.
 	 *	Binary search has been returned
 	 **/
 	IBinarySearchtree<E> remove(E element);
@@ -72,7 +72,7 @@ public interface IBinarySearchtree<E extends Data<E>> extends Iterable<E>, Clona
 	/**	@precondition  -
 	 *	@postcondition - A deep copy of the binary search tree has been returned
 	 **/
-	IBinarySearchtree<E> clone();
+	//IBinarySearchtree<E> clone();
 	
 	/**
     * @precondition

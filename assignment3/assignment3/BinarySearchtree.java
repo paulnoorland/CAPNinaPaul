@@ -1,5 +1,6 @@
 package assignment3;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import assignment2.Data;
@@ -16,11 +17,7 @@ public class BinarySearchtree<E extends Data<E>> implements IBinarySearchtree<E>
 	
 	
 
-	@Override
-	public Iterator<E> iterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	public boolean isEmpty() {
 		return (root == null);
@@ -53,7 +50,7 @@ public class BinarySearchtree<E extends Data<E>> implements IBinarySearchtree<E>
 		return null;
 	}
 	
-	public TreeNode insert(TreeNode root, E element) {		//this doesn't work.. Matty told us this..
+	private TreeNode insert(TreeNode root, E element) {		//this doesn't work.. Matty told us this..
 		if (root == null) {				// empty tree
 			return new TreeNode(element);
 		}
@@ -91,8 +88,13 @@ public class BinarySearchtree<E extends Data<E>> implements IBinarySearchtree<E>
 	@Override
 	public Iterator<E> ascendingIterator() {
 		// TODO Auto-generated method stub
-		return null;
+		
+		// arraylist
+		ArrayList<E> list = new ArrayList<E>();
+		return list.iterator();
 	}
+	
+	
 
 
 	@Override
