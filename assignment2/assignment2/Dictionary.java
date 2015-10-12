@@ -15,39 +15,43 @@ public class Dictionary<K extends Data<K>, V extends Clonable<V>> implements IDi
 	@Override
 	public V getValue(K key) throws APException {
 		list.goToFirst();
+		DictionaryElement d = new DictionaryElement(key, null);		//beter manier?
+		
 		for(int i = 0; i < list.size(); i++){
-			if(list.retrieve().getKey().equals(key)) return list.retrieve().getValue();
+			
+			if(list.retrieve().compareTo(d) == 0) return list.retrieve().getValue().clone();
 			list.goToNext();
 		}
-		throw new APException("Key is not in the dictionary");
+		
+		throw new APException("Identifier is not initialized.");
+	}
+	
+	
+	public int length(){
+		return list.size();
 	}
 
 	@Override
 	public void add(K key, V value) {
+		
 		DictionaryElement temp = new DictionaryElement(key, value);
-		if(list.find(temp));
+		
+		if(list.find(temp)) list.remove();
 		list.insert(temp);	
 	}
 	
 	public void remove(K key) throws APException{
 		list.goToFirst();
+		
 		for(int i = 0; i < list.size(); i++){
-			if(list.retrieve().getKey().equals(key)){
+			
+			if(list.retrieve().getKey().compareTo(key) == 0){
 				list.remove();
 				break;
-			};
+			}
 			list.goToNext();
 		}
 		throw new APException("Key is not in the dictionary");
-	}
-	
-	public boolean isInDictionary(K key){
-		list.goToFirst();
-		for(int i = 0; i < list.size(); i++){
-			if(list.retrieve().getKey().equals(key))return true;
-			list.goToNext();
-		}
-		return false;
 	}
 	
 	private class DictionaryElement implements Data<DictionaryElement> {

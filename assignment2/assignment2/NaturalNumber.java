@@ -5,11 +5,7 @@ public class NaturalNumber<E extends Data<E>> implements INaturalNumber{
 	private StringBuffer number;
 	
 	NaturalNumber(){
-		number = new StringBuffer();
-	}
-	
-	public String getNumber(){
-		return number.toString();
+		number = new StringBuffer('0');
 	}
 	
 	public int getLength() {
@@ -50,6 +46,11 @@ public class NaturalNumber<E extends Data<E>> implements INaturalNumber{
 				}
 			}
 		}
-		return 0;				//This means they are equal
+		return 0;
+	}
+
+	@Override
+	public String getNumber() {
+		return number.toString();
 	}
 }

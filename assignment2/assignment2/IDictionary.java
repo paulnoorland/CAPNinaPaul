@@ -18,7 +18,7 @@ package assignment2;
 *	    </dl>
 *	<br>
 **/
-public interface IDictionary<K extends Data<K>, V extends Clonable<V>>  { // clonable
+public interface IDictionary<K extends Data<K>, V extends Clonable<V>>  {
 
 	/**Initializes a dictionary
 	 * @precondition
@@ -30,17 +30,18 @@ public interface IDictionary<K extends Data<K>, V extends Clonable<V>>  { // clo
 	
 	/**Retrieves the value that is linked to the input key in the dictionary
 	 * @precondition
-	 * 		The key-value pair is in the dictionary
+	 * 		-
 	 * @postcondition
 	 * 		A copy of the value that is linked to the input key is returned
 	 * @param key
 	 * @return value
+	 * @exception the key was not in the dictionary
 	 */
 	public V getValue(K key) throws APException;
 	
 	/**adds an key-value pair to the dictionary
 	 * @precondition
-	 * 		There is not already a dictionaryElement in the dictionary that contains the input key.
+	 * 		-
 	 * @postcondition
 	 * 		The key-value pair is added to the dictionary
 	 * @param key
@@ -50,24 +51,11 @@ public interface IDictionary<K extends Data<K>, V extends Clonable<V>>  { // clo
 	
 	/**Removes the key-value pair that is linked to the input key in the dictionary
 	 * @precondition
-	 * 		the key-value pair is in the dictionary
+	 * 		-
 	 * @postcondition
 	 * 		the key-value pair that was linked to the input key in the dictionary has been removed from the dictionary
 	 * @param key
+	 * @exception The key was not in the dictionary
 	 */
-	public void remove(K key) throws APException;
-	
-	/**Returns whether a key-value pair is in the dictionary
-	 * @precondition
-	 * 		-
-	 * @postcondition
-	 * 		TRUE: The key-value pair is in the dictionary.
-	 * 		FALSE: The key-value pair is not in the dictionary.
-	 * @param key
-	 * @return boolean
-	 */
-	public boolean isInDictionary(K key);
-
-	//Moet hier nog de ADT van dictionaryElement
-	
+	public void remove(K key) throws APException;	
 }

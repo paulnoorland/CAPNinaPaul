@@ -4,9 +4,6 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-
-
-//er zijn nu een heleboel ISets, moet dit veranderen in normale sets?
 public class Interpreter {
 	public static final char	INTERSECT = '*',
 								UNION = '+',
@@ -43,24 +40,30 @@ public class Interpreter {
 	
 	boolean nextCharIsDigit (Scanner in) {
 		return in.hasNext("[0-9]");
-		}
+	}
 	
 	public Identifier checkIdentifier(Scanner in){
-		Identifier temp = new Identifier();
-		while((nextCharIsLetter(in) || nextCharIsDigit(in) && !nextCharIs(in, ' '))){
-			temp.appendChar(nextChar(in));
-		}
-		return temp;
+		StringBuffer s = new StringBuffer();
+		
+		while((nextCharIsLetter(in) || nextCharIsDigit(in))) 
+			s.append(nextChar(in));
+		
+		return new Identifier(s);
 	}
 
-	void checkAssignment(Scanner in) throws APException{	//still need to work out the spaces!
+	void checkAssignment(Scanner in) throws APException{
 		IIdentifier key = checkIdentifier(in);
 		readSpaces(in);
 		
 		if (nextCharIs(in, '=')){
 			nextChar(in);
-			dict.add(key, checkExpression(in));	//add value to dictionary
-		} else throw new APException("Wrong format, '=' expected.");	//nog een extra exception als er een spatie in de identifier zit?
+			
+			if (in.hasNext()){
+				dict.add(key, checkExpression(in));
+				
+			} else throw new APException("Wrong format: Missing expression.");
+			
+		} else throw new APException("Wrong format: unexpected char: '" + nextChar(in)+ " Expected char:/t'='");
 	}
 	
 	void readSpaces(Scanner in){
@@ -68,99 +71,176 @@ public class Interpreter {
 	}
 	
 	public INaturalNumber readNaturalNumber(Scanner in){
-		INaturalNumber temp = new NaturalNumber<>();			//parameteren met?
-		while(nextCharIsDigit(in) && !nextCharIs(in, ' ')){
-			temp.addNumber(nextChar(in));
-		}
+		INaturalNumber temp = new NaturalNumber<>();
+		
+		while(nextCharIsDigit(in)) temp.addNumber(nextChar(in));
 		return temp;
 	}
 	
-	Set<INaturalNumber> readSet(Scanner in){
+	Set<INaturalNumber> readSet(Scanner in) throws APException {
 		Set<INaturalNumber> result = new Set<INaturalNumber>();
-		while(!nextCharIs(in, '}')){
-			readSpaces(in);
-			result.addElement(readNaturalNumber(in));
-		}
 		nextChar(in);
 		readSpaces(in);
+		
+		while(nextCharIsDigit(in)){
+			result.addElement(readNaturalNumber(in));
+			readSpaces(in);
+			
+			if(nextCharIs(in, ',')) {
+				nextChar(in);
+				readSpaces(in);
+				
+
+				if(!nextCharIsDigit(in) || !nextCharIs(in, SET_CLOSE));
+				else 
+					throw new APException("Wrong format: A comma should be followed by another natural number");
+		
+			} else if (nextCharIs(in, SET_CLOSE)) 
+				readSpaces(in);
+			else 
+				throw new APException("Wrong format: ',' expected");	
+		}
+		
+		
+		if (nextCharIs(in, SET_CLOSE)) 
+			nextChar(in);		
+		else 
+			throw new APException("Wrong format: '" + SET_CLOSE + "' expected");
+		
 		return result;
 	}
 	
-	public Set<INaturalNumber> checkFactor(Scanner in) throws APException{
-		readSpaces(in);
-		if(nextCharIsLetter(in)) checkIdentifier(in);
-		else if(nextCharIs(in, COMPLEX_FACTOR_OPEN)){
-			nextChar(in);
-			checkExpression(in);
-		} else if(nextCharIs(in, SET_OPEN)){
-			nextChar(in);
-			return readSet(in);
-		} else if(nextCharIsLetter(in)){
-				
-		} else throw new APException("blablabla"); //<--------------------------------------------
-		return null;	//Hij gaat spasten als je dit niet doet :/
+	public boolean nextCharIsFactor(Scanner in){
+		return (nextCharIs(in, SET_OPEN) || nextCharIs(in, COMPLEX_FACTOR_OPEN) || nextCharIsLetter(in));
 	}
 	
-	public ISet<INaturalNumber> checkTerm(Scanner in)throws APException{	//need a better way to handle spaces probably
-		Set<INaturalNumber> set1 = checkFactor(in);
+	public ISet<INaturalNumber> checkFactor(Scanner in) throws APException{
 		readSpaces(in);
-		if(in.hasNext()){
-			if(nextChar(in) == INTERSECT){
-				Set<INaturalNumber> set2 = checkFactor(in);
-				return set1.intersection(set2);
-			}
+		ISet<INaturalNumber> result = new Set<INaturalNumber>();
+		
+		while (nextCharIsFactor(in)){
+			if(nextCharIsLetter(in)){
+				return dict.getValue(checkIdentifier(in));
+				
+			} else if(nextCharIs(in, COMPLEX_FACTOR_OPEN)){
+				nextChar(in);
+				result = checkExpression(in);
+				readSpaces(in);
+				if (!nextCharIs(in, COMPLEX_FACTOR_CLOSE)) throw new APException("Wrong format: '" + COMPLEX_FACTOR_CLOSE + "' Expected.");
+				nextChar(in);	
+				
+			} else if(nextCharIs(in, SET_OPEN))
+				result = readSet(in);			
+			  else 
+				throw new APException("Wrong format: Set '{ ~~ }', complex factor '( ~~ )' or identifier (key) expected");
 		}
+		return result;
+	}
+
+	
+	public ISet<INaturalNumber> checkTerm(Scanner in)throws APException{
+		ISet<INaturalNumber> set1 = checkFactor(in);
+		readSpaces(in);
+		
+		while(nextCharIs(in, INTERSECT)){
+			nextChar(in);
+			readSpaces(in);
+			
+			if(in.hasNext()){
+				ISet<INaturalNumber> set2 = checkFactor(in);
+				set1 = set1.intersection(set2);
+				readSpaces(in);
+				
+			} else throw new APException("Wrong format: Missing expression.");	
+			}
 		return set1;
+	}
+	
+	public boolean nextCharIsAdditiveOperator(Scanner in){
+		return (nextCharIs(in, COMPLEMENT) || nextCharIs(in, UNION) || nextCharIs(in, SYMMETRIC_DIFFERENCE));
+	}
+	
+	public ISet<INaturalNumber> handleExpressionException(Scanner in, char c) throws APException{
+		readSpaces(in);
+		
+		if(in.hasNext()){
+			ISet<INaturalNumber> set2 = checkTerm(in);
+			return set2;
+			
+		} else throw new APException("Wrong format: Missing expression");	
 	}
 	
 	public ISet<INaturalNumber> checkExpression(Scanner in) throws APException{
 		ISet<INaturalNumber> set1 = checkTerm(in);
-		//out.print("Hallo");
 		readSpaces(in);
-		if(in.hasNext()){
-			readSpaces(in);
-			if(nextChar(in) == UNION){
-				ISet<INaturalNumber> set2 = checkTerm(in);
-				return set1.union(set2);
+			while(nextCharIsAdditiveOperator(in)){	
+
+				if(nextCharIs(in, UNION)){
+					nextChar(in);
+					ISet<INaturalNumber> set2 = handleExpressionException(in, UNION);
+					set1 = set1.union(set2);	
 				
-			} else if(nextChar(in) == COMPLEMENT){	//difference and complement the same?
-				ISet<INaturalNumber> set2 = checkTerm(in);
-				return set1.difference(set2);
+				} else if(nextCharIs(in, COMPLEMENT)){
+					nextChar(in);
+					ISet<INaturalNumber> set2 = handleExpressionException(in, COMPLEMENT);
+					set1 = set1.difference(set2);
 				
-			} else if(nextChar(in) == SYMMETRIC_DIFFERENCE){
-				ISet<INaturalNumber> set2 = checkTerm(in);
-				return set1.symmetricDifference(set2);
+				} else if(nextCharIs(in, SYMMETRIC_DIFFERENCE)){
+					nextChar(in);
+					ISet<INaturalNumber> set2 = handleExpressionException(in, SYMMETRIC_DIFFERENCE);
+					set1 = set1.symmetricDifference(set2);		
+					
+				}	
+			}
+			
+			boolean isComplexFactor = nextCharIs(in, COMPLEX_FACTOR_CLOSE);	//Bug (?): je kan nu overal haakjes sluiten neerzetten..
+			boolean isOperator = nextCharIsAdditiveOperator(in);
+		
+			if (!isOperator && !isComplexFactor && in.hasNext()){	
+				if (nextCharIsDigit(in)){		
+					throw new APException("Wrong format: Sets should start with an {");
+				} else throw new APException("Wrong format: unexpected char: '" + nextChar(in) + "'");
 				
-			} else throw new APException("Unexpected input; additive operator ('+' for union, '|' for symmetric difference or '-' for complement) expected.");
-		} else return set1;	
+			}
+		return set1;	
 	}
 	
 	void printExpression(ISet<INaturalNumber> set){
-		System.out.println("{");
-		out.print(set.getLength());
-		//ISet<INaturalNumber> temp = set.clone();		//moet dit, de clone spaced het programma
-		
-		//while(set.getLength() > 0){
-		//	System.out.print(set.getElement().getNumber());
-		//}
-		System.out.print("}");
+		while(set.size() != 0){
+			INaturalNumber num = set.getElement();
+			set.removeElement(num);
+			System.out.print(num.getNumber() + " ");
+		}
+		System.out.println();
 	}
+	
 	void checkStatement(Scanner in) throws APException{
-		in.useDelimiter("");
-		if (nextCharIsLetter(in)) checkAssignment(in);
-		else if (nextChar(in) == PRINT) printExpression(checkExpression(in));
-		else if (nextChar(in) == COMMENT);
-		else throw new APException("Wrong format: a new line should start with~~~~");
+			readSpaces(in);
+			if (nextCharIsLetter(in)) checkAssignment(in);
+			else if (nextCharIs(in, PRINT)){
+				nextChar(in);
+				readSpaces(in);
+				printExpression(checkExpression(in));
+				
+			} else if (nextCharIs(in, COMMENT));
+			
+			else throw new APException("Wrong format: a new line should start with:" + COMMENT + ", " + PRINT + ", or an identifier.");
+	}
+	
+	void checkEmptyLine(String s) throws APException{
+		if(s.equals("")) throw new APException("Wrong format: empty lines are not allowed.");
 	}
 	
 	void start(){
-		while(in.hasNextLine()){
-			readSpaces(in);
+		while(true){
+			if (!in.hasNextLine()) System.exit(0);
 			String line = in.nextLine();
+
 			Scanner temp = new Scanner(line);
 			temp.useDelimiter("");
 			
 			try {
+				checkEmptyLine(line);
 				checkStatement(temp);
 			} catch (APException e) {
 				System.out.println(e.getMessage());

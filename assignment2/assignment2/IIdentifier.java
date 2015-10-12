@@ -10,12 +10,11 @@ package assignment2;
  * 		All sequences begin with a letter, 
  * 		are alphanumeric and have a length of at least 1 character.
  * @constructor		
- * 		Identifier(String s);			//Waarschijnlijk moeten we geen stringbuffer meegeven toch? Alsnog een string meegeven en dan in de identifierclass 
- * 										//er een string van maken? Of geen arguments meegeven aan constructor en dan een append methode erin doen
+ * 		Identifier(StringBuffer s);			
  * 			<dl>
- * 				<dt><b>PRE-condition</b><dd>String is valid element
+ * 				<dt><b>PRE-condition</b><dd>StringBuffer is valid element
  * 				<dt><b>POST-condition</b><dd>The new element object
- * 				contains a stringBuffer comparable to the source string.
+ * 				contains a stringBuffer equal to the source stringbuffer.
  *			</dl>
  *		<br>
  *		Identifier(Identifier id1);
@@ -53,7 +52,7 @@ public interface IIdentifier extends Data<IIdentifier>{
 	 * 		A stringBuffer representation of the element is returned
 	 **/
 	
-	StringBuffer getStringBuffer();
+	String getString();
 	
 	/** Compares element to the input element.
 	 * @precondition
