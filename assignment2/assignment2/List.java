@@ -13,10 +13,6 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 		init();
 	}
 	
-	public boolean isEmpty(){				
-		return (size == 0);	
-	}
-
 	public List<E> init(){
 		head = null;
 		tail = null;
@@ -37,7 +33,7 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	}
 
 	public ListInterface<E> insert(E d){			//What has to be current element?
-		if(isEmpty()) {													// EMPTY LIST
+		if(size == 0) {													// EMPTY LIST
 			currentElement = head = tail = new Node(d.clone(), null, null);		// Watch for reference errors
 		} else {
 			goToFirst();
@@ -90,10 +86,10 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 		return this;
 	}
 
-	public boolean find(E d){				// Why no recursion? Is way better..
-		goToFirst();						// current points to the last element in list with value < d????
+	public boolean find(E d){				
+		goToFirst();						
 		for(int i = 0; i < size; i++) {
-			if (currentElement.data.compareTo(d) == 0) {			// Is this correct or should we use compareTo
+			if (currentElement.data.compareTo(d) == 0) {			
 				return true;
 			}
 			goToNext();
@@ -102,7 +98,7 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	}
 
 	public boolean goToFirst(){
-		if(!isEmpty()) {
+		if(size != 0) {
 			currentElement = head;
 			return true;
 		} else {
@@ -111,7 +107,7 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	}
 
 	public boolean goToLast(){
-		if(!isEmpty()) {
+		if(size != 0) {
 			currentElement = tail;
 			return true;
 		} else {
@@ -120,7 +116,7 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	}
 
 	public boolean goToNext(){
-		if(isEmpty() || currentElement == tail) {
+		if(size == 0 || currentElement == tail) {
 			return false;
 		} else {
 			currentElement = currentElement.next;
@@ -129,7 +125,7 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 	}
 
 	public boolean goToPrevious(){
-		if(isEmpty() || currentElement == head) {
+		if(size != 0 || currentElement == head) {
 			return false;
 		} else {
 			currentElement = currentElement.prior;
@@ -139,6 +135,7 @@ public class List<E extends Data<E>> implements ListInterface<E>  {
 
 	public ListInterface<E> clone(){
 		List<E> clone = new List<E>();
+		if (currentElement == null) return clone;
 		E currentElementClone = currentElement.data.clone();
 		goToFirst();
 		for (int i = 0; i < size; i++) {

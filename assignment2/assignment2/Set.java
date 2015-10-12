@@ -22,15 +22,12 @@ public class Set<E extends Data<E>> implements ISet<E>{
 	}
 	
 	public void addElement(E element) {
-		set.insert(element);
+		if(!set.find(element))
+			set.insert(element);
 	}
 	
-	public int getLength(){
+	public int size(){
 		return set.size();
-	}
-	
-	public boolean isEmpty(){
-		return set.isEmpty();
 	}
 
 	public void removeElement(E element){
@@ -48,7 +45,7 @@ public class Set<E extends Data<E>> implements ISet<E>{
 	public ISet<E> union(ISet<E> set2){
 		ISet<E> union = this.clone();
 		ISet<E> copySet2 = (Set<E>) set2.clone();
-		while(!copySet2.isEmpty()) {
+		while(copySet2.size() != 0) {
 			E element = copySet2.getElement();
 			copySet2.removeElement(element);
 			if(!union.hasElement(element)) {
@@ -61,7 +58,7 @@ public class Set<E extends Data<E>> implements ISet<E>{
 	public ISet<E> difference(ISet<E> set2) {
 		ISet<E> difference = this.clone();
 		ISet<E> copySet2 = set2.clone();
-			while (!copySet2.isEmpty()) {
+			while (copySet2.size() != 0) {
 				E element = copySet2.getElement();
 				copySet2.removeElement(element);
 				if(difference.hasElement(element)) {
@@ -76,7 +73,7 @@ public class Set<E extends Data<E>> implements ISet<E>{
 		ISet<E> copySet2 = (Set<E>) set2.clone();
 		ISet<E> intersection = new Set<E>();
 		
-		while(!copySet2.isEmpty()){
+		while(copySet2.size() != 0){
 			E element = copySet2.getElement();
 			copySet2.removeElement(element);
 			if(copySet1.hasElement(element)) {
@@ -88,10 +85,10 @@ public class Set<E extends Data<E>> implements ISet<E>{
 	
 	public ISet<E> symmetricDifference(ISet<E> set2){
 		ISet<E> intersection = intersection(set2);
-		ISet<E> symmetricDifference = difference(intersection);		//difference between set1 and intersection
+		ISet<E> symmetricDifference = difference(intersection);	
 		ISet<E> copySet2 = set2.clone();
 		
-		while(!copySet2.isEmpty()) {
+		while(copySet2.size() != 0) {
 			E element = copySet2.getElement();
 			copySet2.removeElement(element);
 			if(!intersection.hasElement(element)) {

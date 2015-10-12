@@ -2,7 +2,7 @@ package assignment2;
 
 /** ADT for the class Set.
 *
-* @author Nina Lijzinga & Paul Noorland
+* @author Nina Lijzenga & Paul Noorland
 * @elements
 *	Any type of elements
 * @structure 
@@ -54,32 +54,20 @@ public interface ISet<E extends Data<E>> extends Clonable<ISet<E>> {
 	 */
 	boolean hasElement(E element);
 	
+	/**	@precondition  -
+	 *	@postcondition - The number of elements in the set has been returned.
+	 **/
+	int size();
+	
 	/** Adds an element to the set
 	 * @precondition
-	 * Element is already in the set							//Is this a pre condition??
+	 * Element is already in the set							
 	 * @postcondition
 	 * The input element is now part of the set
 	 * @param element
 	 */
 	void addElement(E element);
-	
-	/** Returns the length of the set
-	 * @precondition
-	 * -
-	 * @postcondition
-	 * An integer that corresponds to the length of the set is returned
-	 * @return
-	 */
-	int getLength();
-	
-	/** Returns whether the set is empty
-	 * @precondition
-	 * -
-	 * @postcondition
-	 *	returns true if the set is empty
-	 *	returns false if the set is not empty
-	 */
-	boolean isEmpty();
+
 	
 	/**Removes an element from the set
 	 * @precondition

@@ -15,11 +15,6 @@ package assignment2;
 
 public interface ListInterface<E extends Data<E>> extends Clonable<ListInterface<E>> {
 	
-	/**	@precondition -
-	 *  @postcondition - FALSE: list is not empty.
-	 *  				TRUE:  list is empty.
-	 **/
-	boolean isEmpty();
 
 	/** @precondition  -
 	 *	@postcondition - list-POST is empty and has been returned.
@@ -69,7 +64,7 @@ public interface ListInterface<E extends Data<E>> extends Clonable<ListInterface
 	 *	      				- if list-POST is empty
 	 *                    		null
 	 *	      				- if the first element in list > d:
-	 *                    		the first elmenent in list
+	 *                    		the first element in list
 	 *        				else
 	 *	    					the last element in list with value < d
 	 **/
@@ -98,7 +93,7 @@ public interface ListInterface<E extends Data<E>> extends Clonable<ListInterface
 
 
 	/** @precondition  - 
-	 *	@postcondition - FALSE: list is empty of current wijst het eerste object aan
+	 *	@postcondition - FALSE: list is empty or current point to first element in the list
 	 *     				TRUE:  current-POST points to the prior element of current-PRE
 	 */
 	boolean goToPrevious();
