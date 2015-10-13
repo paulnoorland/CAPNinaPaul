@@ -7,12 +7,13 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Sort {
+	
+	public static final String[] possibleArgs = {"-d", "-i"};
+	
 	private boolean caseSensitive = true;				//Setting the default values
 	private boolean monotonicallyIncreasing = true;
 	
-	private IBinarySearchtree<IIdentifier> searchTree;
-	//public BinarySearchtree<Identifier> searchTree2;
-	// Can you say here that you want to put identifiers in? How?
+	private IBinarySearchtree<IIdentifier> searchTree = new BinarySearchtree<IIdentifier>();
 	
 	char nextChar (Scanner in) {
 		return in.next().charAt(0);
@@ -30,10 +31,12 @@ public class Sort {
 		return in.hasNext("[0-9]");
 		}
 	
-	public Identifier checkIdentifier(Scanner in){
-		Identifier temp = new Identifier();
-		while((nextCharIsLetter(in) || nextCharIsDigit(in) && !nextCharIs(in, ' '))){
-			temp.appendChar(nextChar(in));
+	public StringBuffer readWord(Scanner in){
+		StringBuffer temp = new StringBuffer();	
+		while((nextCharIsLetter(in) || nextCharIsDigit(in))){
+			char c = nextChar(in);
+			if (nextCharIsLetter(in) && !caseSensitive) Character.toLowerCase(c);
+			temp.append(nextChar(in));
 		}
 		return temp;
 	}
@@ -41,57 +44,73 @@ public class Sort {
 	public void processIdentifier(Identifier identifier) {	// makes sure equals are removed..
 		if(searchTree.containsElement(identifier)){		// How to parameterize?
 				searchTree.remove(identifier);
-			} else{
+			} else {
 				searchTree.insert(identifier);
 			}
+		}
+	
+	void processWord(Scanner in){
+		StringBuffer temp = readWord(in);
+		if(Character.isLetter(temp.charAt(0))){
+			Identifier i = new Identifier(temp);
+			processIdentifier(i);
+		}
 	}
 	
-	public void readFile(Scanner fileScanner) {
-		//How to deal with the delimiters????
-		
-		// Reads the files
-		// Determines if identifier or non-identifier
-		// 
-		// if identifier gives the identifier to processIdentifier
-		while(fileScanner.hasNext()) {
-			String id = fileScanner.next();
-			if(!caseSensitive) id = id.toLowerCase();				
-			Scanner idScanner = new Scanner(id);
-			Identifier identifier = checkIdentifier(idScanner);
-			processIdentifier(identifier);
+	void processDelimiter(Scanner in){
+		while (in.hasNext() && !nextCharIsDigit(in) && !nextCharIsLetter(in)) 
+			nextChar(in);
+	}
+	
+	public void readFile(Scanner in) {
+		in.useDelimiter("");
+		while(in.hasNext()){
+			processWord(in);
+			processDelimiter(in);
 		}
 	}
 	
 	public void printTree() {
 		Iterator iterator;								// How to parameterize?? 
-		if(monotonicallyIncreasing) {
+		if(monotonicallyIncreasing) 
 			iterator = searchTree.ascendingIterator();
-		} else {
+		else 
 			iterator = searchTree.descendingIterator();
-		}
+		
 		while(iterator.hasNext()) {
 			Identifier id = (Identifier)iterator.next();
-			System.out.printf("%s\n", id.getStringBuffer().toString());		// This must become getString()
+			System.out.printf("%s\n", id.getString());		// This must become getString()
+		}
+	}
+	
+	private boolean isCommandLineOption(String s){
+		for (int i = 0; i < possibleArgs.length; i++)
+			if (s.equals(possibleArgs[i])) return true;
+		return false;
+	}
+	
+	public void parseArgs(String[] args) throws FileNotFoundException{
+		int counter = 0;
+		for(; counter < args.length; counter++){
+			while(isCommandLineOption(args[counter])){
+				if (args[counter].equals("-i")){
+					caseSensitive = false;
+				} else {
+					monotonicallyIncreasing = false;
+				}
+				counter++;
+			}
+			File file = new File(args[counter]);
+			Scanner fileScanner = new Scanner(file);
+			readFile(fileScanner);
 		}
 	}
 	
 	public void start(String[] args) {
-		int j = parseOptions(args);
-		for(int i = 0; i < args.length; i++) {
-			if(args[i].equals("-i")) { 
-				this.caseSensitive = false;
-			} else if(args[i].equals("-d")){
-				this.monotonicallyIncreasing = false;
-				continue;
-			} else {
-				File file = new File(args[i]);					// How to check on no file included?
-				try {
-					Scanner fileScanner = new Scanner(file);
-					readFile(fileScanner);
-				} catch (FileNotFoundException e) {				// Should it be an APException??
-					System.out.println(e.getMessage());
-				}
-			}	
+		try {
+			parseArgs(args);
+		} catch (FileNotFoundException e) {
+			System.out.print(e.getMessage());
 		}
 		printTree();
 	}
