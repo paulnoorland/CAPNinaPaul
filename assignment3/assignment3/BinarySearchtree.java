@@ -90,12 +90,9 @@ public class BinarySearchtree<E extends Data<E>> implements IBinarySearchtree<E>
 	}
 
 	public IBinarySearchtree<E> clone() {
-		IBinarySearchtree<E> tree = new BinarySearchtree<E>();
-		tree.insert(root.data.clone());
-		
-		// Add function if necessary!!
-		
-		return null;
+		BinarySearchtree<E> tree = new BinarySearchtree<E>();
+		tree.root = root.clone();
+		return tree;
 	}
 	
 	public Iterator<E> ascendingIterator() {
@@ -128,7 +125,7 @@ public class BinarySearchtree<E extends Data<E>> implements IBinarySearchtree<E>
 		reversedOrder(root.left);
 	}
 
-	private class TreeNode {
+	private class TreeNode implements Clonable<TreeNode>{
 		E data;
 		TreeNode left, right;
 
@@ -140,6 +137,14 @@ public class BinarySearchtree<E extends Data<E>> implements IBinarySearchtree<E>
 			this.data = data == null ? null : data;
 			this.left = left;
 			this.right = right;
+		}
+		
+		public TreeNode clone() {
+			TreeNode copy = new TreeNode(data);
+			copy.left = left == null ? null : left.clone();
+			copy.right = right == null ? null : right.clone();
+			copy.data = data.clone();
+			return copy;
 		}
 	}
 }
