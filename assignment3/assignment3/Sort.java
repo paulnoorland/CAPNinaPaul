@@ -32,20 +32,12 @@ public class Sort {
 		}
 	
 	public StringBuffer readWord(Scanner in){
-<<<<<<< HEAD
 		StringBuffer temp = new StringBuffer();
 		//if(!nextCharIsLetter(in)) return temp.append(nextChar(in));					//Perhaps delete.
 		while((nextCharIsLetter(in) || nextCharIsDigit(in))){
 			char c = nextChar(in);
 			if (!caseSensitive) c = Character.toLowerCase(c);
 			temp.append(c);
-=======
-		StringBuffer temp = new StringBuffer();	
-		while((nextCharIsLetter(in) || nextCharIsDigit(in))){
-			char c = nextChar(in);
-			if (nextCharIsLetter(in) && !caseSensitive) Character.toLowerCase(c);
-			temp.append(nextChar(in));
->>>>>>> refs/remotes/origin/master
 		}
 		return temp;
 	}
@@ -60,11 +52,7 @@ public class Sort {
 	
 	void processWord(Scanner in){
 		StringBuffer temp = readWord(in);
-<<<<<<< HEAD
 		if(temp.length() != 0 && Character.isLetter(temp.charAt(0))){
-=======
-		if(Character.isLetter(temp.charAt(0))){
->>>>>>> refs/remotes/origin/master
 			Identifier i = new Identifier(temp);
 			processIdentifier(i);
 		}
@@ -102,7 +90,6 @@ public class Sort {
 		return false;
 	}
 	
-<<<<<<< HEAD
 	public void parseArgs(String[] args) throws Exception{
 		int counter = 0;
 		if (!(counter < args.length)) throw new Exception("The program must be given a file");
@@ -115,19 +102,8 @@ public class Sort {
 				}
 				counter++;
 				if (!(counter < args.length)) throw new Exception("The program must be given a file");
-=======
-	public void parseArgs(String[] args) throws FileNotFoundException{
-		int counter = 0;
-		for(; counter < args.length; counter++){
-			while(isCommandLineOption(args[counter])){
-				if (args[counter].equals("-i")){
-					caseSensitive = false;
-				} else {
-					monotonicallyIncreasing = false;
-				}
-				counter++;
->>>>>>> refs/remotes/origin/master
 			}
+			//if (!(counter < args.length)) throw new Exception("The program must be given a file");
 			File file = new File(args[counter]);
 			Scanner fileScanner = new Scanner(file);
 			readFile(fileScanner);
@@ -137,11 +113,7 @@ public class Sort {
 	public void start(String[] args) {
 		try {
 			parseArgs(args);
-<<<<<<< HEAD
 		} catch (Exception e) {
-=======
-		} catch (FileNotFoundException e) {
->>>>>>> refs/remotes/origin/master
 			System.out.print(e.getMessage());
 		}
 		printTree();
