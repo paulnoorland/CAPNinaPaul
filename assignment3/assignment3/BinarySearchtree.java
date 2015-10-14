@@ -75,7 +75,7 @@ public class BinarySearchtree<E extends Data<E>> implements IBinarySearchtree<E>
 			if (root.left == null) {
 				root = root.right; 						// if right is null then node is removed
 			} else if (root.right == null) { 			// Works also for 0 children
-				root = root.right;
+				root = root.left;
 			} else {
 				// 2 children
 				root.data = smallest(root.right); 			// Method that returns smallest value
